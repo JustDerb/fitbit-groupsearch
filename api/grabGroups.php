@@ -1,6 +1,7 @@
 <?php
 require_once '../nogit/fitbit_login.php';
 require_once 'simple_html_dom.php';
+require_once 'sql_functions.php';
 
 // Cookie file for cURL
 $dir = dirname(__FILE__);
@@ -85,15 +86,48 @@ function stripSpacesOut($text)
 		// Create DOM from URL
 		$html = str_get_html($result);
 		
+		$error = false;
 		// Find all article blocks
 		foreach($html->find('li[class=groupItem]') as $group) {
 			$groupName = $group->find('a[class=groupName]', 0);
-		    $item['title']       = stripSpacesOut($groupName->innertext);
-		    $item['href']        = $groupName->href;
-		    $item['members']     = stripSpacesOut($group->find('span[class=totalMembers]', 0)->plaintext);
-		    $item['description'] = stripSpacesOut($group->find('p[class=description]', 0)->plaintext);
-		    $groups[] = $item;
+		    $title       = st_mysql_encode(stripSpacesOut($groupName->innertext),$st_sql);
+		    $href        = st_mysql_encode($groupName->href,$st_sql);
+		    $members     = stripSpacesOut($group->find('span[class=totalMembers]', 0)->plaintext,$st_sql);
+		    preg_match_all('/\d+/', $members, $matches);
+			if (count($matches[0]) > 0)
+				$members = st_mysql_encode($matches[0][0],$st_sql);
+			else
+			{
+				echo "ERROR: No member number found it: ".$members;
+				$error = true;
+				break;
+			}
+		    $description = st_mysql_encode(stripSpacesOut($group->find('p[class=description]', 0)->plaintext),$st_sql);
+		    
+		    /*
+		    $query =  "IF EXISTS (SELECT 1 FROM groups WHERE url='$href') \n";
+			$query .= "    UPDATE groups SET name='$title', members='$members', description='$description' WHERE url='$href'; \n";
+			$query .= "ELSE \n";
+		    $query .= "    INSERT INTO  groups (id,name,members,description,url) VALUES (NULL ,  '$title',  '$members',  '$description',  '$href'); \n";
+		    $query .= "END IF \n";
+		    */
+		    $query =  "INSERT INTO  groups (id,name,members,description,url) VALUES (NULL ,  '$title',  '$members',  '$description',  '$href') \n";
+		    $query .= "ON DUPLICATE KEY \n";
+		    $query .= "UPDATE name='$title', members='$members', description='$description'";
+		    
+		    $result = mysql_query($query, $st_sql);
+		    // Did we error?
+		    if (!$result)
+		    {
+		    	echo "\n".$query;
+		    	echo "\n".mysql_error($st_sql);
+		    	$error = true;
+		    	break;
+		    }		  
 		}
+		
+		if ($error)
+			break;
 		
 		//echo '<pre>';
 		//var_dump($groups);
@@ -121,7 +155,7 @@ function stripSpacesOut($text)
 		//flush();
 		
 		// Sleep so we don't DDOS the site
-		sleep(5);
+		sleep(2);
 	}
 
 	curl_close($ch);
