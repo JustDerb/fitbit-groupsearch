@@ -131,7 +131,7 @@ EOT;
 EOT;
 
 		$footer = <<<EOT
-<p>Join the <a href="http://www.fitbit.com/group/229YCB">FitBit Group Search</a>!</p>
+<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
 EOT;
 	}
 	
