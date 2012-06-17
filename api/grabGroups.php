@@ -28,6 +28,9 @@ function fitbit_login($ch, $username, $password)
 	curl_setopt ($ch, CURLOPT_POST, 1); 
 	$result = curl_exec ($ch); 
 	
+	unset($loginurl);
+	unset($postdata);
+		
 	return $result;
 }
 
@@ -61,6 +64,10 @@ function fitbit_getGroupsPage($ch, $page)
 	curl_setopt ($ch, CURLOPT_HTTPGET, 1);
 
 	$result = curl_exec ($ch); 
+	
+	unset($url);
+	unset($groupsurl);
+	unset($pageVar);
 
 	return $result;
 }
@@ -79,12 +86,14 @@ function stripSpacesOut($text)
 	$prevPageSet = -1;
 	while ($pageNum < 2600)
 	{
+		echo "Memory used: ".memory_get_usage()."\n";
 		echo "PageNum: ".$pageNum."";
 		$result = fitbit_getGroupsPage($ch, $pageNum);
 		//echo($result);
 
 		// Create DOM from URL
 		$html = str_get_html($result);
+		unset($result);
 		
 		$error = false;
 		// Find all article blocks
@@ -103,17 +112,15 @@ function stripSpacesOut($text)
 				break;
 			}
 		    $description = st_mysql_encode(stripSpacesOut($group->find('p[class=description]', 0)->plaintext),$st_sql);
-		    
-		    /*
-		    $query =  "IF EXISTS (SELECT 1 FROM groups WHERE url='$href') \n";
-			$query .= "    UPDATE groups SET name='$title', members='$members', description='$description' WHERE url='$href'; \n";
-			$query .= "ELSE \n";
-		    $query .= "    INSERT INTO  groups (id,name,members,description,url) VALUES (NULL ,  '$title',  '$members',  '$description',  '$href'); \n";
-		    $query .= "END IF \n";
-		    */
+
 		    $query =  "INSERT INTO  groups (id,name,members,description,url) VALUES (NULL ,  '$title',  '$members',  '$description',  '$href') \n";
 		    $query .= "ON DUPLICATE KEY \n";
 		    $query .= "UPDATE name='$title', members='$members', description='$description'";
+		    
+		    unset($groupName);
+		    unset($title);
+		    unset($href);
+		    unset($members);
 		    
 		    $result = mysql_query($query, $st_sql);
 		    // Did we error?
@@ -125,14 +132,10 @@ function stripSpacesOut($text)
 		    	break;
 		    }		  
 		}
-		
+				
 		if ($error)
 			break;
-		
-		//echo '<pre>';
-		//var_dump($groups);
-		//echo '</pre>';
-		
+				
 		$footer = $html->find('div[id=contentFooter]', 0);
 		$pTag = $footer->find('p', 0);
 		$aTag = $footer->find('a');
@@ -151,13 +154,24 @@ function stripSpacesOut($text)
 			else
 				break;
 		}
-		
-		//flush();
+			
+		// Clean up
+		unset($result);
+		$html->clear();
+		unset($html);
+		$html = null;
+		unset($footer);
+		unset($pTag);
+		unset($aTag);
 		
 		// Sleep so we don't DDOS the site
 		sleep(2);
 	}
 
 	curl_close($ch);
-
+	unset($ch);
+	unset($pageNum);
+	unset($prevPageSet);
+	unset($cookie);
+	unset($dir);
 ?>
