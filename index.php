@@ -9,6 +9,14 @@ function clean($elem)
             $elem[$key] = $this->clean($value); 
     return $elem; 
 } 
+function is_int2($v) {
+  $i = intval($v);
+  if ("$i" == "$v") {
+    return TRUE;
+  } else {
+    return FALSE;
+  }
+}
 
 	$path = "";
 	$content = "";
@@ -16,44 +24,89 @@ function clean($elem)
 	
 	if ($_GET['s'])
 	{
-		$_GET['s'] = stripslashes($_GET['s']);
-		$path = " / <a href='?s=".clean($_GET['s'])."'>".clean($_GET['s'])."</a>";
+		require_once 'api/sql_functions.php';
+		$numOfItems = 24;
 		
-$content = <<<EOT
-	<div id="publicgroups">
-		<div class="section groups">
-			<ul class="grouplist">
-				<li class="groupitem">
-					<a class="groupname textlimit" href="#">Group Name</a>
-					<span class="totalmembers">### Members</span>
-					<p class="description textlimit" title="Description here">Description here</p>
-				</li>
-				<li class="groupitem">
-					<a class="groupname textlimit" href="#">Group Name</a>
-					<span class="totalmembers">### Members</span>
-					<p class="description textlimit" title="Description here">Description here</p>
-				</li>
-				<li class="groupitem">
-					<a class="groupname textlimit" href="#">Group Name</a>
-					<span class="totalmembers">### Members</span>
-					<p class="description textlimit" title="Description here">Description here</p>
-				</li>
-				<li class="groupitem">
-					<a class="groupname textlimit" href="#">Group Name</a>
-					<span class="totalmembers">### Members</span>
-					<p class="description textlimit" title="Description here">Description here</p>
-				</li>
+		if (is_int2($_GET['p']))
+		{
+			$pageNum = st_mysql_encode($_GET['p'],$st_sql);
+		}
+		else
+			$pageNum = 0;
+			
+		$startGroup = $pageNum*$numOfItems;
+		
+		$_GET['s'] = stripslashes($_GET['s']);
+		
+		$content =  "<div id='publicgroups'>";
+		$content .= "<div class='section groups'>";
+		$content .= "<ul class='grouplist'>";
 
-			</ul>
-		</div> 
+		$search = st_mysql_encode($_GET['s'],$st_sql);
+		
+		$baseQuery =  "FROM groups\n"
+				    . "WHERE (\n"
+				    . "name LIKE '%".$search."%'\n"
+				    . "OR description LIKE '%".$search."%'\n"
+				    . ")\n"
+				    . "ORDER BY CASE WHEN name LIKE '%".$search."%'\n"
+				    . "THEN 1 \n"
+				    . "ELSE 2 \n"
+				    . "END \n";
+		$query =  "SELECT * \n".$baseQuery."LIMIT ".$startGroup." , ".$numOfItems;
+		$totalItemsQ = "SELECT COUNT( * ) AS total \n".$baseQuery;
+		$result = mysql_query($totalItemsQ, $st_sql);
+		$row = mysql_fetch_assoc($result);
+		$totalItems = $row['total'];
+		
+		//echo $query;
+		$result = mysql_query($query, $st_sql);
+		//echo mysql_error($st_sql);
+		
+		$displayed = 0;
+		while ($row = mysql_fetch_assoc($result)) {
+			$content .= "<li class='groupitem'> \n";
+			$content .= "	<a class='groupname textlimit' href='http://www.fitbit.com".$row['url']."'>".$row['name']."</a> \n";
+			$content .= "	<span class='totalmembers'>".$row['members']." Members</span> \n";
+			$content .= "	<p class='description textlimit4' title='".$row['description']."'>".$row['description']."</p> \n";
+			$content .= "</li>\n";
+			$displayed++;
+		}
+		
+		if ($displayed == 0)
+		{
+			$content .= <<<EOT
+<div class="innerpading">
+	<div class"alreadyMember panelSwitch panelSwitchConnected  left">
+		<div class="column column1 form clearfix curvyIgnore">
+			<h2 style="padding:0 0 20px 0">No fitbit Groups Found!</h2>
+			<p><a href="index.php">Try another search</a></p>
+		</div>
 	</div>
+</div>
 EOT;
-	
-
-		$footer = <<<EOT
-		<p>Showing # - ## of #,#### total groups.</p>
-				<a href="?blah=1">Next page</a>
-EOT;
+		}
+				
+		$content .= "</ul><script type='text/javascript'>$.setTextLimits();</script>";
+		$content .= "</div>";
+		$content .= "</div>";
+		
+		
+		$path =  " / <a href='?s=".clean($_GET['s'])."'>".clean($_GET['s'])."</a> (".number_format($totalItems)." results)<div style='float:right'>";	
+		
+		$footer = "<p>Showing ".$startGroup." - ".($startGroup+$displayed)." of ".number_format($totalItems)." total groups.</p>";
+		if ($pageNum != 0) 
+		{
+			$path .= "<a href='?s=".$_GET['s']."&p=".($pageNum-1)."'>Previous page</a> ";
+			$footer .= "<a href='?s=".$_GET['s']."&p=".($pageNum-1)."'>Previous page</a> ";
+		}
+		if (($startGroup+$displayed) < $totalItems)
+		{
+			$path .= "<a href='?s=".$_GET['s']."&p=".($pageNum+1)."'>Next page</a> ";
+			$footer .= "<a href='?s=".$_GET['s']."&p=".($pageNum+1)."'>Next page</a>";
+		}
+			
+		$path .= "</div>";
 	}
 	else
 	{
@@ -74,10 +127,11 @@ EOT;
 		</div>
 	</div>
 </div>
+<div style="height:400px"></div>
 EOT;
 
 		$footer = <<<EOT
-<p></p>
+<p>Join the <a href="http://www.fitbit.com/group/229YCB">FitBit Group Search</a>!</p>
 EOT;
 	}
 	
@@ -90,27 +144,14 @@ EOT;
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/css1.css" charset="utf-8">
 <link rel="stylesheet" type="text/css" href="css/css2.css" charset="utf-8">
+<script type="text/javascript"  src="js/setTextLimits.js"  charset="utf-8" ></script>
 </head>
 <body class="fb-body droid">
 	<div id="container" class="narrowcontainer">
-		<header id="branding">
-			<h1>
-				<a href="index.php" title="Go to homepage">Fitbit Group Search</a>
-			</h1>
-		</header>
-		<nav id="sitenav">
-			<ul>
-				<li>
-					<a href="http://www.fitbit.com/">fitbit</a>
-				</li>
-				<li class="current cur">
-					<a href="index.php">Search</a>
-				</li>
-				<li>
-					<a href="about.php">About</a>
-				</li>
-			</ul>
-		</nav>
+		<?php 
+			$headerPage = "search";
+			include 'includes/header.php' 
+		?>
 		<div id="content" class="allgroups">
 			<div id="contenthead">
 				<div class="groupnav">
