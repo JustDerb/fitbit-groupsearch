@@ -10,24 +10,10 @@
 </head>
 <body class="fb-body droid">
 	<div id="container" class="narrowcontainer">
-		<header id="branding">
-			<h1>
-				<a href="index.php" title="Go to homepage">Fitbit Group Search</a>
-			</h1>
-		</header>
-		<nav id="sitenav">
-			<ul>
-				<li>
-					<a href="http://www.fitbit.com/">fitbit</a>
-				</li>
-				<li>
-					<a href="index.php">Search</a>
-				</li>
-				<li class="current cur">
-					<a href="about.php">About</a>
-				</li>
-			</ul>
-		</nav>
+		<?php 
+			$headerPage = "about";
+			include 'includes/header.php' 
+		?>
 		<div id="content" class="allgroups">
 			<div id="contenthead">
 				<div class="groupnav">
@@ -40,13 +26,25 @@
 					<p>This is a website to help fitbit users easily search the fitbit cummunity 
 					groups so that they don't have to wade through pages and pages of groups only 
 					to get nowhere!</p>
+					<br />
+					<h2>This site looks a lot like FitBit's website.  What gives?</h2>
+					<p>The reason why this site looks so alike is because it is! I have taken and 
+					reverse-engineered their website to create a look-alike website so that any FitBit 
+					user know immediatly how to the site.  <b>This, in no way, is a phishing website.</b>
+					We don't even ask you to log in anywhere!</p>
+					<br />
 					<h2>Why doesn't fitbit have a search feature?</h2>
 					<p>I don't know!  You should ask them!</p>
+					<br />
+					<h2>I just made a group and I can't find it on here!</h2>
+					<p>I scrape fitbit's server about everyday so please wait at least 24 hours for 
+					your group will show up.</p>
+					<br />
+					<h2>I got an issue or suggestion</h2>
+					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB">FitBit Group 
+					Search</a> and create a topic discussion.</p>
 				</div>
-			</div>
-			<div id="contentfooter">
-				<p>Get back to searching?</p>
-				<a href="index.php">Yeah</a>
+				<div style="height:300px"></div>
 			</div>
 		</div>
 	</div>
