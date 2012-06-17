@@ -145,6 +145,20 @@ EOT;
 <link rel="stylesheet" type="text/css" href="css/css1.css" charset="utf-8">
 <link rel="stylesheet" type="text/css" href="css/css2.css" charset="utf-8">
 <script type="text/javascript"  src="js/setTextLimits.js"  charset="utf-8" ></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-26103835-1']);
+  _gaq.push(['_setDomainName', 'relliker.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </head>
 <body class="fb-body droid">
 	<div id="container" class="narrowcontainer">
