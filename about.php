@@ -72,7 +72,7 @@
 					<p>I don't know.  It was just a domain name I bought... I'll buy a better one eventually.</p>
 
 				</div>
-				<div style="height:300px"></div>
+				<div style="height:100px"></div>
 			</div>
 		</div>
 	</div>
