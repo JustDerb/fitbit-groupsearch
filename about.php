@@ -58,6 +58,10 @@
 					<h2>I got an issue or suggestion</h2>
 					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB">FitBit Group 
 					Search</a> and create a topic discussion.</p>
+					<br />
+					<h2>Why is this website called Relliker.com?</h2>
+					<p>I don't know.  It was just a domain name I bought... I'll buy a better one eventually.</p>
+
 				</div>
 				<div style="height:300px"></div>
 			</div>
