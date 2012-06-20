@@ -1,4 +1,5 @@
 <?php
+include_once 'includes/sqlSearch.php';
 
 function clean($elem) 
 { 
@@ -37,6 +38,7 @@ function is_int2($v) {
 		$startGroup = $pageNum*$numOfItems;
 		
 		$_GET['s'] = stripslashes($_GET['s']);
+		$_GET['type'] = stripslashes($_GET['type']);
 		
 		$content =  "<div id='publicgroups'>";
 		$content .= "<div class='section groups'>";
@@ -44,31 +46,41 @@ function is_int2($v) {
 
 		$search = st_mysql_encode($_GET['s'],$st_sql);
 		
-		$baseQuery =  "FROM groups\n"
-				    . "WHERE (\n"
-				    . "name LIKE '%".$search."%'\n"
-				    . "OR description LIKE '%".$search."%'\n"
-				    . ")\n"
-				    . "ORDER BY CASE WHEN name LIKE '%".$search."%'\n"
-				    . "THEN 1 \n"
-				    . "ELSE 2 \n"
-				    . "END \n";
-		$query =  "SELECT * \n".$baseQuery."LIMIT ".$startGroup." , ".$numOfItems;
-		$totalItemsQ = "SELECT COUNT( * ) AS total \n".$baseQuery;
-		$result = mysql_query($totalItemsQ, $st_sql);
-		$row = mysql_fetch_assoc($result);
-		$totalItems = $row['total'];
+		$note = "";
+		if (!$_GET['type'])
+		{
+			$baseQuery = search_basic($search);
+			$note = "(<strong>Basic Search</strong>)";
+		}
+		else
+		{
+			$baseQuery = search_keywordMatch($search);
+			$note = "(<strong>Experimental Search</strong> - Number of results cannot be calculated right now...)";
+		}
 		
-		//echo $query;
+		$query =  "select id, name, description, members, url ".$baseQuery." LIMIT ".$startGroup." , ".$numOfItems;
+		// Remove when we figure out how to get the count
+		if (!$_GET['type'])
+		{
+			$totalItemsQ = "SELECT COUNT( * ) AS total \n".$baseQuery;
+			$result = mysql_query($totalItemsQ, $st_sql);
+			$row = mysql_fetch_assoc($result);
+			$totalItems = $row['total'];
+		}
+		else
+		{
+			$totalItems = 9999;
+		}
+		//echo $query."\n\n\n".$totalItemsQ."\n\n\n";
+		
 		$result = mysql_query($query, $st_sql);
-		//echo mysql_error($st_sql);
-		
+				
 		$displayed = 0;
 		while ($row = mysql_fetch_assoc($result)) {
 			$content .= "<li class='groupitem'> \n";
 			$content .= "	<a class='groupname textlimit' href='http://www.fitbit.com".$row['url']."'>".$row['name']."</a> \n";
 			$content .= "	<span class='totalmembers'>".$row['members']." Members</span> \n";
-			$content .= "	<p class='description textlimit4' title='".$row['description']."'>".$row['description']."</p> \n";
+			$content .= "	<p class='description textlimit4' title=\"".$row['description']."\">".$row['description']."</p> \n";
 			$content .= "</li>\n";
 			$displayed++;
 		}
@@ -92,18 +104,18 @@ EOT;
 		$content .= "</div>";
 		
 		
-		$path =  " / <a href='?s=".clean($_GET['s'])."'>".clean($_GET['s'])."</a> (".number_format($totalItems)." results)<div style='float:right'>";	
+		$path =  " / <a href='?s=".clean($_GET['s'])."&type=".$_GET['type']."'>".clean($_GET['s'])."</a> (".number_format($totalItems)." results) ".$note."<div style='float:right'>";	
 		
-		$footer = "<p>Showing ".$startGroup." - ".($startGroup+$displayed)." of ".number_format($totalItems)." total groups.</p>";
+		$footer = "<p>Showing ".$startGroup." - ".($startGroup+$displayed)." of ".number_format($totalItems)." total groups. ".$note."</p>";
 		if ($pageNum != 0) 
 		{
-			$path .= "<a href='?s=".$_GET['s']."&p=".($pageNum-1)."'>Previous page</a> ";
-			$footer .= "<a href='?s=".$_GET['s']."&p=".($pageNum-1)."'>Previous page</a> ";
+			$path .= "<a href='?s=".$_GET['s']."&type=".$_GET['type']."&p=".($pageNum-1)."'>Previous page</a> ";
+			$footer .= "<a href='?s=".$_GET['s']."&type=".$_GET['type']."&p=".($pageNum-1)."'>Previous page</a> ";
 		}
 		if (($startGroup+$displayed) < $totalItems)
 		{
-			$path .= "<a href='?s=".$_GET['s']."&p=".($pageNum+1)."'>Next page</a> ";
-			$footer .= "<a href='?s=".$_GET['s']."&p=".($pageNum+1)."'>Next page</a>";
+			$path .= "<a href='?s=".$_GET['s']."&type=".$_GET['type']."&p=".($pageNum+1)."'>Next page</a> ";
+			$footer .= "<a href='?s=".$_GET['s']."&type=".$_GET['type']."&p=".($pageNum+1)."'>Next page</a>";
 		}
 			
 		$path .= "</div>";
@@ -119,6 +131,8 @@ EOT;
 			<form action="" method="get">
 				<div class="tInput">
 					<input placeholder="Group Name or Description" name="s" class="text" type="text" style="width:100%" />
+					<input placeholder="Experimental search" name="type" value="e1" type="checkbox" id="e1search" style="margin:10px 0 0 10px"/>
+						<label for="e1search" style="font-size:1.5em">Experimental search (Improved searching algorithm.  Number of results cannot be calculated right now...)</label>
 				</div>
 				<div class="bLogIn right" style="clear:both;padding:20px 0 0 0">
 					<input type="submit" class="ui-button curvyIgnore" />
