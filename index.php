@@ -130,7 +130,7 @@ EOT;
 			<h2 style="padding:0 0 20px 0">Search fitbit Groups</h2>
 			<form action="" method="get">
 				<div class="tInput">
-					<input placeholder="Group Name or Description" name="s" class="text" type="text" style="width:100%" />
+					<input placeholder="Group Keywords" name="s" class="text" type="text" style="width:100%" id="searchTerms" />
 					<input placeholder="Experimental search" name="type" value="e1" type="checkbox" id="e1search" style="margin:10px 0 0 10px"/>
 						<label for="e1search" style="font-size:1.5em">Experimental search (Improved searching algorithm.  Number of results cannot be calculated right now...)</label>
 				</div>
