@@ -137,7 +137,21 @@ EOT;
 				<div class="bLogIn right" style="clear:both;padding:20px 0 0 0">
 					<input type="submit" class="ui-button curvyIgnore" />
 				</div>
+				<div id="locationSearchHeader" style="float:left;font-size:1.5em;margin:1.5em 0 0 10px;width:80%"><div id="locationSearch" style="margin:0.5em 0 0 0"></div></div>
+				<div style="clear:both"></div>
 			</form>
+			<script type="text/javascript">
+				var visitorGeolocation = new geolocate(false, true, 'visitorGeolocation');
+				 
+				var callback = function(){
+					$('#locationSearchHeader').prepend('Have you tried: ');
+                	addHelpTerm(visitorGeolocation.getField('cityName'));
+                	addHelpTerm(visitorGeolocation.getField('regionName'));
+                	addHelpTerm(visitorGeolocation.getField('countryCode'));
+                	addHelpTerm(visitorGeolocation.getField('zipCode'));
+                };
+				visitorGeolocation.checkcookie(callback);
+			</script>
 		</div>
 	</div>
 </div>
@@ -159,6 +173,18 @@ EOT;
 <link rel="stylesheet" type="text/css" href="css/css1.css" charset="utf-8">
 <link rel="stylesheet" type="text/css" href="css/css2.css" charset="utf-8">
 <script type="text/javascript"  src="js/setTextLimits.js"  charset="utf-8" ></script>
+<script type="text/javascript"  src="js/geolocate.js"  charset="utf-8" ></script>
+<script type="text/javascript" charset="utf-8">
+	function addTerm(term) {
+		$('#searchTerms').val($('#searchTerms').val()+' '+term);
+	}
+	function addHelpTerm(term) {
+		$('<a href="#"></a>').text(term).click(function() {
+	          addTerm(term);
+	    }).appendTo('#locationSearch');
+	    $('#locationSearch').append(' ');
+	}
+</script>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
