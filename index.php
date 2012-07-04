@@ -169,9 +169,9 @@ EOT;
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <title>fitbit - Group Search</title>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/css1.css" charset="utf-8">
 <link rel="stylesheet" type="text/css" href="css/css2.css" charset="utf-8">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript"  src="js/setTextLimits.js"  charset="utf-8" ></script>
 <script type="text/javascript"  src="js/geolocate.js"  charset="utf-8" ></script>
 <script type="text/javascript" charset="utf-8">
