@@ -55,10 +55,10 @@ function is_int2($v) {
 		else
 		{
 			$baseQuery = search_keywordMatch($search);
-			$note = "(<strong>Experimental Search</strong> - Number of results cannot be calculated right now...)";
+			$note = "(<strong>Keyword Search</strong>)";
 		}
 		
-		$query =  "select id, name, description, members, url ".$baseQuery." LIMIT ".$startGroup." , ".$numOfItems;
+		$query =  "select id, name, description, members, url ".$baseQuery;
 		// Remove when we figure out how to get the count
 		if (!$_GET['type'])
 		{
@@ -69,8 +69,13 @@ function is_int2($v) {
 		}
 		else
 		{
-			$totalItems = 9999;
+			$totalItemsQ = "SELECT COUNT( * ) AS total from ( \n".$query." ) as tt";
+			$result = mysql_query($totalItemsQ, $st_sql);
+			$row = mysql_fetch_assoc($result);
+			$totalItems = $row['total'];
 		}
+		
+		$query .= " LIMIT ".$startGroup." , ".$numOfItems;
 		//echo $query."\n\n\n".$totalItemsQ."\n\n\n";
 		
 		$result = mysql_query($query, $st_sql);
@@ -128,11 +133,14 @@ EOT;
 	<div class"alreadyMember panelSwitch panelSwitchConnected  left">
 		<div class="column column1 form clearfix curvyIgnore">
 			<h2 style="padding:0 0 20px 0">Search fitbit Groups</h2>
+			<p>This will do a search on all group titles and descriptions.</p>
 			<form action="" method="get">
 				<div class="tInput">
 					<input placeholder="Group Keywords" name="s" class="text" type="text" style="width:100%" id="searchTerms" />
-					<input placeholder="Experimental search" name="type" value="e1" type="checkbox" id="e1search" style="margin:10px 0 0 10px"/>
-						<label for="e1search" style="font-size:1.5em">Experimental search (Improved searching algorithm.  Number of results cannot be calculated right now...)</label>
+					<input placeholder="Full Term Search" name="type" value="e0" type="radio" id="e0search" style="margin:10px 0 0 10px"/>
+						<label for="e0search" style="font-size:1.5em">Full Term Search</label>
+					<input placeholder="Keyword Search" name="type" value="e1" type="radio" id="e1search" style="margin:10px 0 0 10px" checked="checked"/>
+						<label for="e1search" style="font-size:1.5em">Keyword Search</label>
 				</div>
 				<div class="bLogIn right" style="clear:both;padding:20px 0 0 0">
 					<input type="submit" class="ui-button curvyIgnore" />
