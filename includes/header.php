@@ -9,7 +9,7 @@
 <nav id="sitenav">
 	<ul>
 		<li>
-			<a href="http://www.fitbit.com/">fitbit</a>
+			<a href="http://www.fitbit.com/" target="_blank">fitbit</a>
 		</li>
 		<li <?php if ($headerPage == "search") echo $selected ?> >
 			<a href="index.php">Search</a>

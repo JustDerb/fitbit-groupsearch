@@ -23,7 +23,7 @@
 </script>
 </head>
 <body class="fb-body droid">
-	<a href="https://github.com/JustDerb/fitbit-groupsearch">
+	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
 		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
 	</a>
 	<div id="container" class="narrowcontainer">
@@ -68,7 +68,7 @@
 					your group will show up.</p>
 					<br />
 					<h2 id="about5">I got an issue or suggestion</h2>
-					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB">FitBit Group 
+					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group 
 					Search</a> and create a topic discussion.</p>
 					<br />
 					<h2 id="about6">Why is this website called Relliker.com?</h2>
