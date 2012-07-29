@@ -50,7 +50,7 @@
 			</div>
 			<div id="contentbody" class="primary">
 				<div class="innerpading">
-					<div class"alreadyMember panelSwitch panelSwitchConnected  left">
+					<div class="alreadyMember panelSwitch panelSwitchConnected  left">
 						<div class="column column1 form clearfix curvyIgnore">
 							<h2 style="padding:0 0 20px 0">Filter Groups</h2>
 							<p>Choose an option below to filter <strong>ALL</strong> groups.  There is no paging of data, so it might take awhile to load results.</p>
@@ -58,13 +58,14 @@
 								<input placeholder="Top Members" name="type" value="f0" type="radio" id="fmembers" style="margin:10px 0 0 10px"/>
 								<label for="fmembers" style="font-size:1.5em">Top Members</label>
 							</div>							
-							<div id="filterResults" style="min-height:400px"></div>
-							<div style="clear:both;height:100px;"></div>
-							<script type="text/javascript"  src="js/filter.js"  charset="utf-8" ></script>
-							<script type="text/javascript" charset="utf-8" >$('#fmembers').click();</script>
 						</div>
 					</div>
 				</div>
+				<div style="clear:both"></div>
+				<div id="filterResults" style="min-height:400px"></div>
+				<div style="clear:both;height:100px;"></div>
+				<script type="text/javascript"  src="js/filter.js"  charset="utf-8" ></script>
+				<script type="text/javascript" charset="utf-8" >$('#fmembers').click();</script>
 			</div>
 			<div id="contentfooter">
 				
