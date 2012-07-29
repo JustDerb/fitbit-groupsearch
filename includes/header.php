@@ -14,6 +14,9 @@
 		<li <?php if ($headerPage == "search") echo $selected ?> >
 			<a href="index.php">Search</a>
 		</li>
+		<li <?php if ($headerPage == "filter") echo $selected ?> >
+			<a href="filter.php">Filter</a>
+		</li>
 		<li <?php if ($headerPage == "about") echo $selected ?>>
 			<a href="about.php">About</a>
 		</li>
