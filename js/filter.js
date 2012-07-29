@@ -36,10 +36,16 @@ function getResults(data) {
 	$.setTextLimits();
 }
 
+var lastClicked = '';
+
 $('#fmembers').click(function() {
-	clearResults();
-	$('#filterResults').append($('<p>Please wait...</p>'));
-	getResults({
-		f: "members"
-	});
+	if (lastClicked != 'fmembers')
+	{
+		lastClicked = 'fmembers';
+		clearResults();
+		$('#filterResults').append($('<p class="innerpading"><br/>Please wait...</p>'));
+		getResults({
+			f: "members"
+		});
+	}
 });
