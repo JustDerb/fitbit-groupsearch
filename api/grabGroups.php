@@ -92,6 +92,7 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	echo '';
 	$extras = array();
 	$stripchars = array(",");
+	$pattern = '/[\d,.]+/i';
 	
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysVeryActive($group)); 
@@ -101,7 +102,6 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	unset($result);
 	
 	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	$pattern = '/[\d,.]+/i';
 	preg_match($pattern, $subject, $matches);
 	$extras['veryactive'] = trim(str_replace($stripchars, "", $matches[0]));
 	if (empty($extras['veryactive'])) {
@@ -109,6 +109,8 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	}	
 	$html->clear();
 	unset($html);
+	unset($matches);
+	unset($subject);
 	$html = null;
 	
 	// -------------------------------------------------------------------------
@@ -117,9 +119,7 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	// Create DOM from URL
 	$html = str_get_html($result);
 	unset($result);
-	
 	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	$pattern = '/[\d,.]+/i';
 	preg_match($pattern, $subject, $matches);
 	$extras['steps'] = trim(str_replace($stripchars, "", $matches[0]));
 	if (empty($extras['steps'])) {
@@ -127,6 +127,8 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	}
 	$html->clear();
 	unset($html);
+	unset($matches);
+	unset($subject);
 	$html = null;
 
 	// -------------------------------------------------------------------------
@@ -137,7 +139,6 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	unset($result);
 	
 	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	$pattern = '/[\d,.]+/i';
 	preg_match($pattern, $subject, $matches);
 	$extras['activepoints'] = str_replace($stripchars, "", $matches[0]);
 	if (empty($extras['activepoints'])) {
@@ -145,6 +146,8 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	}
 	$html->clear();
 	unset($html);
+	unset($matches);
+	unset($subject);
 	$html = null;
 
 	// -------------------------------------------------------------------------
@@ -155,7 +158,6 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	unset($result);
 	
 	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	$pattern = '/[\d,.]+/i';
 	preg_match($pattern, $subject, $matches);
 	$extras['distance'] = str_replace($stripchars, "", $matches[0]);
 	if (empty($extras['distance'])) {
@@ -163,8 +165,13 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	}
 	$html->clear();
 	unset($html);
+	unset($matches);
+	unset($subject);
 	$html = null;
 	
+	unset($pattern);
+	unset($stripchars);
+
 	return $extras;
 }
 
@@ -199,16 +206,21 @@ function stripSpacesOut($text)
 		    $href        = st_mysql_encode($groupName->href,$st_sql);
 		    $members     = stripSpacesOut($group->find('span[class=totalMembers]', 0)->plaintext,$st_sql);
 		    preg_match_all('/\d+/', $members, $matches);
-			if (count($matches[0]) > 0)
+			if (count($matches[0]) > 0) 
+			{
 				$members = st_mysql_encode($matches[0][0],$st_sql);
+			}
 			else
 			{
-				echo "ERROR: No member number found it: ".$members;
+				echo "ERROR: No member number found in: ".$members;
 				$error = true;
 				break;
 			}
 		    $description = st_mysql_encode(stripSpacesOut($group->find('p[class=description]', 0)->plaintext),$st_sql);
 		    $group = st_mysql_encode(substr($groupName->href, 7),$st_sql);
+		    
+		    // Output so we know where we are
+		    echo $group."\n";
 		    
 		    $query =  "INSERT INTO  groups (id,name,members,description,url,groupid) VALUES (NULL ,  '$title',  '$members',  '$description',  '$href', '$group') \n";
 		    $query .= "ON DUPLICATE KEY \n";
@@ -226,7 +238,9 @@ function stripSpacesOut($text)
 		    	echo "\n\n".mysql_error($st_sql);
 		    	$error = true;
 		    	break;
-		    }		 
+		    }
+		    
+		    unset($query);
 		    
 			// Get extras
 			$extras = fitbit_getGroupsPageExtras($ch, $group);
@@ -239,6 +253,7 @@ function stripSpacesOut($text)
 		    
 		    unset($group);
 		    unset($href);
+		    unset($extras);
 		    
 		    $result = mysql_query($query, $st_sql);
 		    // Did we error?
@@ -249,6 +264,11 @@ function stripSpacesOut($text)
 		    	//$error = true;
 		    	//break;
 		    }
+		    
+		    unset($query);
+		    
+		    // Sleep so we don't DDOS the site
+			sleep(2);
 		}
 				
 		if ($error)
@@ -264,8 +284,10 @@ function stripSpacesOut($text)
 			if (count($matches[0]) > 0)
 			{
 				echo " | Next ?Start=: ".$matches[0][0]."\n";
-				if ($matches[0][0] == $prevPageSet)
+				if ($matches[0][0] == $prevPageSet) {
+					ECHO "Done. Exitting...";
 					break;
+				}
 				$prevPageSet = $matches[0][0];
 				$pageNum++;
 			}
