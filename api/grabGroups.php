@@ -107,6 +107,9 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	if (empty($extras['veryactive'])) {
 		$extras['veryactive'] = "0";
 	}	
+	$html->clear();
+	unset($html);
+	$html = null;
 	
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysSteps($group)); 
@@ -122,6 +125,9 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	if (empty($extras['steps'])) {
 		$extras['steps'] = "0";
 	}
+	$html->clear();
+	unset($html);
+	$html = null;
 
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysActivityPoints($group)); 
@@ -137,6 +143,9 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	if (empty($extras['activepoints'])) {
 		$extras['activepoints'] = "0";
 	}
+	$html->clear();
+	unset($html);
+	$html = null;
 
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysDistance($group)); 
@@ -152,6 +161,9 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	if (empty($extras['distance'])) {
 		$extras['distance'] = "0";
 	}
+	$html->clear();
+	unset($html);
+	$html = null;
 	
 	return $extras;
 }
