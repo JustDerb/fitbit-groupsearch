@@ -47,12 +47,12 @@ function is_int2($v) {
 		$search = st_mysql_encode($_GET['s'],$st_sql);
 		
 		$note = "";
-		if (!$_GET['type'])
+		if ($_GET['type'] == 'e0')
 		{
 			$baseQuery = search_basic($search);
 			$note = "(<strong>Basic Search</strong>)";
 		}
-		else
+		else //if ($_GET['type'] == 'e1')
 		{
 			$baseQuery = search_keywordMatch($search);
 			$note = "(<strong>Keyword Search</strong>)";
@@ -60,14 +60,14 @@ function is_int2($v) {
 		
 		$query =  "select id, name, description, members, url ".$baseQuery;
 		// Remove when we figure out how to get the count
-		if (!$_GET['type'])
+		if ($_GET['type'] == 'e0')
 		{
 			$totalItemsQ = "SELECT COUNT( * ) AS total \n".$baseQuery;
 			$result = mysql_query($totalItemsQ, $st_sql);
 			$row = mysql_fetch_assoc($result);
 			$totalItems = $row['total'];
 		}
-		else
+		else //if ($_GET['type'] == 'e1')
 		{
 			$totalItemsQ = "SELECT COUNT( * ) AS total from ( \n".$query." ) as tt";
 			$result = mysql_query($totalItemsQ, $st_sql);
