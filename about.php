@@ -77,6 +77,9 @@
 				</div>
 				<div style="height:100px"></div>
 			</div>
+			<div id="contentfooter">
+				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
+			</div>
 		</div>
 	</div>
 	<div id="siteinfowrapper">

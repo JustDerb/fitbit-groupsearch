@@ -89,7 +89,7 @@
 				<script type="text/javascript" charset="utf-8" >updateData();</script>
 			</div>
 			<div id="contentfooter">
-				
+				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
 			</div>
 		</div>
 	</div>
