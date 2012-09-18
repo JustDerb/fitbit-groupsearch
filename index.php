@@ -105,6 +105,7 @@ EOT;
 		}
 				
 		$content .= "</ul><script type='text/javascript'>$.setTextLimits();</script>";
+		$content .= '<div style="padding:20px"><div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div>';
 		$content .= "</div>";
 		$content .= "</div>";
 		
@@ -166,6 +167,7 @@ EOT;
                 };
 				visitorGeolocation.checkcookie(callback);
 			</script>
+			<div style="padding:20px 0px 0px 0px"><div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div></div>
 		</div>
 	</div>
 </div>
@@ -215,6 +217,14 @@ EOT;
 </script>
 </head>
 <body class="fb-body droid">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=350050445089720";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
 		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
 	</a>
