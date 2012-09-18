@@ -218,7 +218,7 @@ function stripSpacesOut($text)
 	
 	echo "Adding all groups back into pool...\n";
 	
-	$addQuery =  "INSERT INTO groupinfoqueue ";
+	$addQuery =  "INSERT IGNORE INTO groupinfoqueue ";
 	$addQuery .= "SELECT T2.groupid ";
 	$addQuery .= "FROM groups T2 ";
 	$addQuery .= "LEFT JOIN groupinfoqueue T1 ON T1.groupid = T2.groupid ";
