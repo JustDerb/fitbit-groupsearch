@@ -132,7 +132,13 @@ EOT;
 <div class="innerpading">
 	<div class"alreadyMember panelSwitch panelSwitchConnected  left">
 		<div class="column column1 form clearfix curvyIgnore">
-			<h2 style="padding:0 0 20px 0">Search fitbit Groups</h2>
+			<h1 style="padding:0 0 10px 0">Welcome!</h1>
+			<p>You are probably here because FitBit only lists there groups alphabetically, right?  
+			Well, this is a search engine that does one better!  Search for groups by title and also in their descriptions.
+			Go over to the Filter page to see statistics about all the groups on FitBit - like who is most active.  Try an search
+			broad keywords, and clarify your search by entering your city or any other information you might think of.  Welcome
+			to the new way of FitBit Group Search.</p>
+			<h2 style="padding:20px 0 10px 0">Search fitbit Groups</h2>
 			<p>This will do a search on all group titles and descriptions.</p>
 			<form action="" method="get">
 				<div class="tInput">
