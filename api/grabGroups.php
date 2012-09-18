@@ -7,22 +7,6 @@ require_once 'sql_functions.php';
 $dir = dirname(__FILE__);
 $cookie=$dir."/../nogit/fitbit_cookie"; 
 
-function get30DaysVeryActive($group) {
-	return "http://www.fitbit.com/stats/leaders?rankByStatistic=cum_mins_very_active_30_days&cnid=4.".$group."&includeViewerValues=false&start=0&count=3&extraStatistics=engaged_avg_mins_very_active_30_days&valueWhenNotAvailable=--&label=mins&updateRate=DAILY";
-}
-
-function get30DaysSteps($group) {
-	return "http://www.fitbit.com/stats/leaders?rankByStatistic=cum_steps_30_days&cnid=4.".$group."&includeViewerValues=false&start=0&count=3&extraStatistics=engaged_avg_steps_30_days&valueWhenNotAvailable=--&label=steps&updateRate=DAILY";
-}
-
-function get30DaysActivityPoints($group) {
-	return "http://www.fitbit.com/stats/leaders?rankByStatistic=cum_activity_30_days&cnid=4.".$group."&includeViewerValues=false&start=0&count=3&extraStatistics=&valueWhenNotAvailable=--&label=pts&updateRate=DAILY";
-}
-
-function get30DaysDistance($group) {
-	return "http://www.fitbit.com/stats/leaders?rankByStatistic=cum_distance_miles_30_days&cnid=4.".$group."&includeViewerValues=false&start=0&count=3&extraStatistics=engaged_avg_distance_miles_30_days&valueWhenNotAvailable=--&label=miles&updateRate=DAILY";
-}
-
 function fitbit_login($ch, $username, $password)
 {
 	global $cookie;
@@ -85,94 +69,6 @@ function fitbit_getGroupsPage($ch, $page) {
 	
 	$url = $groupsurl.$pageVar;
 	return  fitbit_getPage($ch, $url);
-}
-
-function fitbit_getGroupsPageExtras($ch, $group)
-{
-	echo '';
-	$extras = array();
-	$stripchars = array(",");
-	$pattern = '/[\d,.]+/i';
-	
-	// -------------------------------------------------------------------------
-	$result = fitbit_getPage($ch, get30DaysVeryActive($group)); 
-	
-	// Create DOM from URL
-	$html = str_get_html($result);
-	unset($result);
-	
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['veryactive'] = trim(str_replace($stripchars, "", $matches[0]));
-	if (empty($extras['veryactive'])) {
-		$extras['veryactive'] = "0";
-	}	
-	$html->clear();
-	unset($html);
-	unset($matches);
-	unset($subject);
-	$html = null;
-	
-	// -------------------------------------------------------------------------
-	$result = fitbit_getPage($ch, get30DaysSteps($group)); 
-	
-	// Create DOM from URL
-	$html = str_get_html($result);
-	unset($result);
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['steps'] = trim(str_replace($stripchars, "", $matches[0]));
-	if (empty($extras['steps'])) {
-		$extras['steps'] = "0";
-	}
-	$html->clear();
-	unset($html);
-	unset($matches);
-	unset($subject);
-	$html = null;
-
-	// -------------------------------------------------------------------------
-	$result = fitbit_getPage($ch, get30DaysActivityPoints($group)); 
-	
-	// Create DOM from URL
-	$html = str_get_html($result);
-	unset($result);
-	
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['activepoints'] = str_replace($stripchars, "", $matches[0]);
-	if (empty($extras['activepoints'])) {
-		$extras['activepoints'] = "0";
-	}
-	$html->clear();
-	unset($html);
-	unset($matches);
-	unset($subject);
-	$html = null;
-
-	// -------------------------------------------------------------------------
-	$result = fitbit_getPage($ch, get30DaysDistance($group)); 
-	
-	// Create DOM from URL
-	$html = str_get_html($result);
-	unset($result);
-	
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['distance'] = str_replace($stripchars, "", $matches[0]);
-	if (empty($extras['distance'])) {
-		$extras['distance'] = "0";
-	}
-	$html->clear();
-	unset($html);
-	unset($matches);
-	unset($subject);
-	$html = null;
-	
-	unset($pattern);
-	unset($stripchars);
-
-	return $extras;
 }
 
 function stripSpacesOut($text)
@@ -239,36 +135,10 @@ function stripSpacesOut($text)
 		    	$error = true;
 		    	break;
 		    }
-		    
-		    unset($query);
-		    
-			// Get extras
-			$extras = fitbit_getGroupsPageExtras($ch, $group);
-			
-			$query =  "UPDATE groups SET steps='".$extras['steps']."', ";
-			$query .= " activepoints='".$extras['activepoints']."', ";
-			$query .= " distance='".$extras['distance']."', ";
-			$query .= " veryactive='".$extras['veryactive']."' ";
-			$query .= " WHERE url='".$href."'";
-		    
+		    		    
 		    unset($group);
-		    unset($href);
-		    unset($extras);
-		    
-		    $result = mysql_query($query, $st_sql);
-		    // Did we error?
-		    if (!$result)
-		    {
-		    	echo "\n".$query;
-		    	echo "\n\n".mysql_error($st_sql);
-		    	//$error = true;
-		    	//break;
-		    }
-		    
+		    unset($href);		    
 		    unset($query);
-		    
-		    // Sleep so we don't DDOS the site
-			sleep(2);
 		}
 				
 		if ($error)
