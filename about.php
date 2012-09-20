@@ -77,7 +77,7 @@
 					<br />
 					<h2 id="about5">I got an issue or suggestion</h2>
 					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group 
-					Search</a> and create a topic discussion.</p>
+					Search</a> and create a topic discussion or email me at <u>admin [at] relliker.com</u></p>
 					<br />
 					<h2 id="about6">Why is this website called Relliker.com?</h2>
 					<p>I don't know.  It was just a domain name I bought... I'll buy a better one eventually.</p>
