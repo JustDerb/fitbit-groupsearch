@@ -3,7 +3,7 @@
 ?>
 <header id="branding">
 	<h1>
-		Fitbit Group Search
+		<img alt="Fitbit" src="images/bg_branding_a.png"> Group Search
 	</h1>
 </header>
 <nav id="sitenav">
