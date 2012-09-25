@@ -47,7 +47,7 @@
 		<div id="content" class="allgroups">
 			<div id="contenthead">
 				<div class="groupnav">
-					<a href="index.php">Filter</a><span id="typeOut"></span>
+					<a href="filter.php">Filter</a><span id="typeOut"></span>
 				</div>
 			</div>
 			<div id="contentbody" class="primary">

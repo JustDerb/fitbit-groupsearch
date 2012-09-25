@@ -31,38 +31,43 @@ function getGroupItem(data) {
 }
 
 function getResults(data) {
-	$('#typeOut').html(' / '+$('input[name=type]:checked', '.tInput').attr('placeholder'));
-	$.getJSON('api/filter.php', data, function(data) {
-		clearResults();
-		var items = [];
-		
-		$.each(data, function(key, val) {
-			items.push(getGroupItem(val));
-		});
-		
-		
-		var mainResults = $('<div id="publicgroups"></div>');
-		var sectionGroups = $('<div class="section groups"></div>').appendTo(mainResults);
-		var results = $('<ul class="grouplist"></ul>').appendTo(sectionGroups);
-		
-		$.each(items, function(index, item) {
-		//console.log(item);
-			$(item).appendTo(results);
-		});
-		
-		$(mainResults).appendTo('#filterResults');
-	});
-	$.setTextLimits();
+    var filterType = $('input[name=type]:checked', '.tInput').attr('placeholder');
+    if (filterType) {
+    	$('#typeOut').html(' / '+filterType);
+    	$.getJSON('api/filter.php', data, function(data) {
+    		clearResults();
+    		var items = [];
+    		
+    		$.each(data, function(key, val) {
+    			items.push(getGroupItem(val));
+    		});
+    		
+    		
+    		var mainResults = $('<div id="publicgroups"></div>');
+    		var sectionGroups = $('<div class="section groups"></div>').appendTo(mainResults);
+    		var results = $('<ul class="grouplist"></ul>').appendTo(sectionGroups);
+    		
+    		$.each(items, function(index, item) {
+    		//console.log(item);
+    			$(item).appendTo(results);
+    		});
+    		
+    		$(mainResults).appendTo('#filterResults');
+    	});
+    	$.setTextLimits();
+	}
 }
 
 function updateData() {
 	var selected = $('input[name=type]:checked', '.tInput').val();
-	clearResults();
-	$('#filterResults').append($('<p class="innerpading"><br/>Please wait...</p>'));
-	getResults({
-		f: selected,
-		limit: $('#shownumber').val()
-	});
+	if (selected) {
+    	clearResults();
+    	$('#filterResults').append($('<p class="innerpading"><br/>Please wait...</p>'));
+    	getResults({
+    		f: selected,
+    		limit: $('#shownumber').val()
+    	});
+	}
 }
 
 $('input[name=type]', '.tInput').change(function(event) {
