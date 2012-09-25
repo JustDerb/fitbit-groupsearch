@@ -118,9 +118,9 @@ function stripSpacesOut($text)
 		    // Output so we know where we are
 		    echo $group."\n";
 		    
-		    $query =  "INSERT INTO  groups (id,name,members,description,url,groupid) VALUES (NULL ,  '$title',  '$members',  '$description',  '$href', '$group') \n";
+		    $query =  "INSERT INTO  groups (id,updated,name,members,description,url,groupid) VALUES (NULL , NOW() ,  '$title',  '$members',  '$description',  '$href', '$group') \n";
 		    $query .= "ON DUPLICATE KEY \n";
-		    $query .= "UPDATE name='$title', members='$members', description='$description', groupid='$group'";
+		    $query .= "UPDATE name='$title', members='$members', description='$description', groupid='$group', updated=NOW()";
 		    
 		    unset($groupName);
 		    unset($title);
