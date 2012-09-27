@@ -225,9 +225,6 @@ EOT;
   js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=350050445089720";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
-		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
-	</a>
 	<div id="container" class="narrowcontainer">
 		<?php 
 			$headerPage = "search";
@@ -252,5 +249,8 @@ EOT;
 			
 		</footer>
 	</div>
+	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
+		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
+	</a>
 </body>
 </html>

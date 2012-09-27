@@ -31,9 +31,6 @@
   js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=350050445089720";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
-		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
-	</a>
 	<div id="container" class="narrowcontainer">
 		<?php 
 			$headerPage = "about";
@@ -83,18 +80,23 @@
 					<p>I don't know.  It was just a domain name I bought... I'll buy a better one eventually.</p>
 
 				</div>
-				<div style="padding:20px"><div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div>
-				<div style="height:100px"></div>
-			</div>
-			<div id="contentfooter">
-				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
-			</div>
-		</div>
-	</div>
+				<div style="padding:20px">
+				    <div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div>
+				    <div style="height:100px"></div>
+			    </div>
+    			<div id="contentfooter">
+    				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
+    			</div>
+		    </div>
+	    </div>
 	<div id="siteinfowrapper">
 		<footer id="siteinfo">
 			
 		</footer>
 	</div>
+	</div>
+	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
+		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
+	</a>
 </body>
 </html>
