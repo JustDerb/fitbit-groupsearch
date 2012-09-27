@@ -2,6 +2,11 @@
 <html>
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta property="og:title" content="Relliker - Fitbit Group Search" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.relliker.com/filter.php" />
+<meta property="og:description" content="A group search tool for fitbit." />
+<meta property="og:image" content="http://relliker.com/images/bg_branding_a.png" />
 <title>fitbit - Group Search</title>
 <link rel="stylesheet" type="text/css" href="css/css1.css" charset="utf-8">
 <link rel="stylesheet" type="text/css" href="css/css2.css" charset="utf-8">
