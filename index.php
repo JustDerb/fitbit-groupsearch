@@ -105,7 +105,7 @@ EOT;
 		}
 				
 		$content .= "</ul><script type='text/javascript'>$.setTextLimits();</script>";
-		$content .= '<div style="padding:20px"><div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div>';
+		$content .= '<div style="padding:20px"><div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div></div>';
 		$content .= "</div>";
 		$content .= "</div>";
 		
