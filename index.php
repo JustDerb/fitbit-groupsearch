@@ -23,12 +23,12 @@ function is_int2($v) {
 	$content = "";
 	$footer = "";
 	
-	if ($_GET['s'])
+	if (@$_GET['s'])
 	{
 		require_once 'api/sql_functions.php';
 		$numOfItems = 24;
 		
-		if (is_int2($_GET['p']))
+		if (is_int2(@$_GET['p']))
 		{
 			$pageNum = st_mysql_encode($_GET['p'],$st_sql);
 		}
