@@ -262,6 +262,7 @@ FOOTER;
 			<div class="hero-unit">
 				<h1>Looking for something?</h1>
 				<p>Enter your search terms and begin finding your groups!</p>
+				<p><strong>Coming Soon!</strong> Be able to sort your results by number of members, and other statistics from fitbit!</p>
 			</div>
 <?php endif ?>
 		</div>
