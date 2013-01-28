@@ -54,7 +54,7 @@ require_once ('includes/analytics.php');
 					<form method="get">
 						<fieldset style="width: 100%">
 						<legend>Search</legend>
-						<input class="input-block-level" placeholder="Search terms..." type="text" name="s">
+						<input class="input-block-level" placeholder="Search terms..." type="text" name="s" value="<?php if (isset($_GET['s'])) {echo(htmlentities($_GET['s']));} ?>">
 						<?php
 /*						
 						<legend class="muted">Additional Options</legend>
@@ -125,7 +125,7 @@ ADSENSE;
 			</div>
 		</div>
 		<div class="span9">
-<?php if (@$_GET['s']): ?>
+<?php if (isset($_GET['s'])): ?>
 			<h4>Results for "<strong><?php echo(htmlentities($_GET['s'])); ?></strong>"</h4>
 			<table class="table table-hover">
 				<colgroup>
