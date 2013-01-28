@@ -170,11 +170,6 @@ ADSENSE;
 						$numOfItems = 50;
 						$searchResults = $searchAPI->search($search,$pageNum,$numOfItems);	
 						
-$advertisement = <<<SAMPLE
-					<tr>
-						<td colspan="6"><strong>This is an advertisment This is an advertisment This is an advertisment This is an advertisment This is an advertisment This is an advertisment This is an advertisment This is an advertisment This is an advertisment This is an advertisment </strong></td>
-					</tr>
-SAMPLE;
 						$resultNum = 0;
 						$numAds = 0;
 						foreach ($searchResults as $key => $value) 
