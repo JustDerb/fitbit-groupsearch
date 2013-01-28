@@ -91,7 +91,7 @@
 				<script type="text/javascript" charset="utf-8" >updateData();</script>
 			</div>
 			<div id="contentfooter">
-				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
+				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>! <a href="http://beta.relliker.com/">Try out the new Relliker!</a></p>
 			</div>
 		</div>
 	</div>
@@ -100,8 +100,5 @@
 			
 		</footer>
 	</div>
-	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
-		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
-	</a>
 </body>
 </html>

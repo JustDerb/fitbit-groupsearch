@@ -1,5 +1,6 @@
 <?php
-include_once 'includes/sqlSearch.php';
+require_once 'includes/sqlSearch.php';
+require_once('includes/localhostStuff.php');
 
 function clean($elem) 
 { 
@@ -129,6 +130,26 @@ EOT;
 	else
 	{
 		$path = "";
+	if (!defined("LOCALHOST")) {
+$googleAdsense = <<<ADSENSE
+			<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-8861318913253064";
+			/* Footer Ad (Long) */
+			google_ad_slot = "5970958017";
+			google_ad_width = 728;
+			google_ad_height = 90;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+ADSENSE;
+	}
+	else
+	{
+		$googleAdsense = getAdBlock(728,90);
+	}
+
 		$content = <<<EOT
 <div class="innerpading">
 	<div class"alreadyMember panelSwitch panelSwitchConnected  left">
@@ -138,7 +159,7 @@ EOT;
 			Well, this is a search engine that does one better!  Search for groups by title and also in their descriptions.
 			Go over to the Filter page to see statistics about all the groups on FitBit - like who is most active.  Try an search
 			broad keywords, and clarify your search by entering your city or any other information you might think of.  Welcome
-			to the new way of FitBit Group Search.</p>
+			to the new way of FitBit Group Search. <a href="http://beta.relliker.com/">Try out the new Relliker!</a></p>
 			<h2 style="padding:20px 0 10px 0">Search fitbit Groups</h2>
 			<p>This will do a search on all group titles and descriptions.</p>
 			<form action="" method="get">
@@ -168,6 +189,7 @@ EOT;
 				visitorGeolocation.checkcookie(callback);
 			</script>
 			<div style="padding:20px 0px 0px 0px"><div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div></div>
+			<div style="text-align:center">{$googleAdsense}</div>
 		</div>
 	</div>
 </div>
@@ -175,7 +197,7 @@ EOT;
 EOT;
 
 		$footer = <<<EOT
-<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>!</p>
+<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>! <a href="http://beta.relliker.com/">Try out the new Relliker!</a></p>
 EOT;
 	}
 	
@@ -254,8 +276,5 @@ EOT;
 			
 		</footer>
 	</div>
-	<a href="https://github.com/JustDerb/fitbit-groupsearch" target="_blank">
-		<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub">
-	</a>
 </body>
 </html>
