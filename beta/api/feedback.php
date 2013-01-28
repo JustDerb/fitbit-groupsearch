@@ -38,9 +38,14 @@ if (isset($_POST['feedback']))
 			}
 		}
 		
+		$email = "";
+		if (isset($_POST['email'])) {
+			$email = st_mysql_encode($_POST['email'], $st_sql);
+		}
+		
 		$title = st_mysql_encode($_POST['feedback'], $st_sql);
 		
-		$query = "INSERT INTO feedback (`id`, `title`, `type`, `private`, `added`) VALUES (NULL, '$title', '$type', '$private', NOW());";
+		$query = "INSERT INTO feedback (`id`, `title`, `type`, `private`, `added`, `email`) VALUES (NULL, '$title', '$type', '$private', NOW(), '$email');";
 		$result = mysql_query($query, $st_sql);
 		
 		if ($result) {

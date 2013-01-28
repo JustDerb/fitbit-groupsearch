@@ -53,7 +53,7 @@ require_once ('includes/analytics.php');
 			<form method="post" action="api/feedback.php">
 				<fieldset style="width: 100%">
 				<legend>Feedback</legend>
-				<textarea class="input-block-level" placeholder="Enter feedback here" rows="3" name="feedback"></textarea>
+				<textarea class="input-block-level" placeholder="Enter feedback here" rows="3" name="feedback" required="required"></textarea>
 				<div id="feedbackTypes">
 					<label class="caption">Feedback type:</label>
 					<label class="radio">
@@ -69,6 +69,8 @@ require_once ('includes/analytics.php');
 						<span><i class="icon-exclamation-sign"></i> Problem</span>
 					</label>
 				</div>
+				<br/>
+				<input class="input-block-level" type="email" placeholder="Email address for inquiries..." name="email">
 				<br/>
 				<label class="checkbox muted">
 					<input type="checkbox" value="true" name="private">
