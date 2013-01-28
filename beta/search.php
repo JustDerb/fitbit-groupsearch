@@ -126,7 +126,7 @@ ADSENSE;
 		</div>
 		<div class="span9">
 <?php if (@$_GET['s']): ?>
-			<h4>Results for "<strong>test text for groups</strong>"</h4>
+			<h4>Results for "<strong><?php echo(htmlentities($_GET['s'])); ?></strong>"</h4>
 			<table class="table table-hover">
 				<colgroup>
 					<col span="1" style="width: 10%">
