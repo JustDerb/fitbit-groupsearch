@@ -182,10 +182,11 @@ ADSENSE;
 							$actPts = number_format($value['activepoints']);
 							$dist = number_format($value['distance']);
 							$va = number_format($value['veryactive']);
+							$url = $value['url'];
 $result = <<<RESULT
 					<tr>
 						<td><span class="label label-info">{$members}</span></td>
-						<td><a href="#" target="_blank">{$title}</a><br />
+						<td><a href="http://www.fitbit.com{$url}" target="_blank">{$title}</a><br />
 						{$description}</td>
 						<td><span class="label">{$steps}</span></td>
 						<td><span class="label label-success">{$actPts}</span></td>

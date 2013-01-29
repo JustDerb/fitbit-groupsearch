@@ -64,6 +64,7 @@ class fitbitSearch {
 		while ($row = mysql_fetch_assoc($result)) {
 			$retResults[] = array("members" => $row['members'],
 									"title" => $row['name'],
+									"url" => $row['url'],
 									"description" => $row['description'],
 									"steps" => $row['steps'],
 									"activepoints" => $row['activepoints'],
