@@ -41,7 +41,7 @@ class st_mysql
 		global $db_user;
 		global $db_pass;
 		global $db_name;
-		$connection = @mysql_connect($db_host, $db_user, $db_pass);
+		$connection = mysql_connect($db_host, $db_user, $db_pass);
 		if (!$connection)
 			die('<h1>Could not connect to the database</h1><h2>Please try again after a few moments.</h2>');
 		$this->link = $connection;	
@@ -51,7 +51,7 @@ class st_mysql
 	
 	public function __destruct() {
 		//Object being deleted.  Free up any resources we need.       
-		@mysql_close($this->link);
+		mysql_close($this->link);
     }
 } 
 

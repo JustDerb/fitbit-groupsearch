@@ -1,95 +1,116 @@
 <?php
 require_once('includes/localhostStuff.php');
+
+$G_TITLE = "Relliker - Fitbit Group Search";
+$G_DESCRIPTION = "A group search tool for fitbit.";
+
+require_once ('includes/page_timer.php');
+$timer = new page_timer();
+$timer -> start();
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-<meta property="og:title" content="Relliker - Fitbit Group Search" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="http://www.relliker.com/about.php" />
-<meta property="og:description" content="A group search tool for fitbit." />
-<meta property="og:image" content="http://relliker.com/images/bg_branding_a.png" />
-<title>fitbit - Group Search</title>
-<link rel="stylesheet" type="text/css" href="css/css1.css" charset="utf-8">
-<link rel="stylesheet" type="text/css" href="css/css2.css" charset="utf-8">
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-26103835-1']);
-  _gaq.push(['_setDomainName', 'relliker.com']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+<!-- OpenGraph -->
+<meta content="<?php echo($G_TITLE); ?>" property="og:title" />
+<meta content="website" property="og:type" />
+<meta content="http://www.relliker.com/" property="og:url" />
+<meta content="<?php echo($G_DESCRIPTION); ?>" property="og:description" />
+<meta content="http://relliker.com/images/bg_branding_a.png" property="og:image" />
+<!-- End OpenGraph -->
+<title><?php echo($G_TITLE); ?></title>
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" media="screen" rel="stylesheet">
+<style>
+body { padding-top: 40px; }
+@media screen and (max-width: 768px) {
+    body { padding-top: 0px; }
+}
+</style>
+<!-- Mobile friendly -->
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<!-- End Mobile friendly -->
+<link href="css/custom.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<!-- End Bootstrap -->
+<!-- Custom javascript -->
+<!-- End Custom javascript --><?php
+require_once ('includes/analytics.php');
+?>
 </head>
-<body class="fb-body droid">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=350050445089720";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-	<div id="container" class="narrowcontainer">
-		<?php 
-			$headerPage = "about";
-			include 'includes/header.php' 
-		?>
-		<div id="content" class="allgroups">
-			<div id="contenthead">
-				<div class="groupnav">
-					<a href="about.php">About</a>
-				</div>
+
+<body>
+<?php include_once('includes/navbar.php'); ?>
+<!-- Main content -->
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div style="height:4em"></div>
+	</div>
+	<div class="row-fluid">
+		<div class="span8 offset2">
+			<h2>About this site</h2>
+			<p>This site was made by a fellow fitbit-er to provide the community an easy way of 
+			finding groups within the fitbit.com website. Currently, you can only page through 
+			the groups in alphabetical order! So, this site provides keyword-based searching and
+			a lot of other useful tools to find the right group for you.</p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span8 offset2">
+			<h2>FAQ</h2>
+			<div class="well">
+				<ol>
+					<li><a href="#faq1">What is this site?</a></li>
+					<li><a href="#faq2">Why doesn't FitBit have a search feature?</a></li>
+					<li><a href="#faq3">I just made a group and I can't find it on here!</a></li>
+					<li><a href="#faq4">I got an issue or suggestion</a></li>
+					<li><a href="#faq5">Why is this website called Relliker.com?</a></li>
+					<li><a href="#faq6">Why are there ads?</a></li>
+				</ol>
 			</div>
-			<div id="contentbody">
-				<div class="innerpading">
-					<ol style="font-size:1.5em;padding:0 0 0 20px">
-						<li><a href="#about1">What is this site?</a></li>
-						<li><a href="#about2">This site looks a lot like FitBit's website.  What gives?</a></li>
-						<li><a href="#about3">Why doesn't FitBit have a search feature?</a></li>
-						<li><a href="#about4">I just made a group and I can't find it on here!</a></li>
-						<li><a href="#about5">I got an issue or suggestion</a></li>
-						<li><a href="#about6">Why is this website called Relliker.com?</a></li>
-					</ol>
-					<div style="height:20px"></div>
-					<h2 id="about1">What is this site?</h2>
-					<p>This is a website to help FitBit users easily search the fitbit 
-					community 
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span8 offset2">
+			<ol class="unstyled">
+				<li id="faq1">
+					<h4>What is this site?</h4>
+					<p>This is a website to help FitBit users easily search the fitbit community 
 					groups so that they don't have to wade through pages and pages of groups only 
 					to get nowhere!</p>
-					<br />
-					<h2 id="about2">This site looks a lot like FitBit's website.  What gives?</h2>
-					<p>The reason why this site looks so alike is because it is! I have taken and 
-					reverse-engineered their website to create a look-alike website so that any FitBit 
-					user know immediately how to the site.  <strong>This, in no way, is a phishing website.</strong>
-					We don't even ask you to log in anywhere!</p>
-					<br />
-					<h2 id="about3">Why doesn't FitBit have a search feature?</h2>
-					<p>I don't know!  You should ask them!</p>
-					<br />
-					<h2 id="about4">I just made a group and I can't find it on here!</h2>
-					<p>I scrape FitBit's server about everyday so please wait at least 24 hours for 
-					your group will show up.</p>
-					<br />
-					<h2 id="about5">I got an issue or suggestion</h2>
-					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group 
-					Search</a> and create a topic discussion or email me at <u>admin [at] relliker.com</u></p>
-					<br />
-					<h2 id="about6">Why is this website called Relliker.com?</h2>
-					<p>I don't know.  It was just a domain name I bought... I'll buy a better one eventually.</p>
-
-				</div>
-				<div style="padding:20px">
-				    <div class="fb-like" data-href="http://relliker.com" data-send="true" data-width="450" data-show-faces="true" data-action="recommend"></div>
-			    </div>
-			    <div style="text-align:center">
+				</li>
+				<li id="faq2">
+					<h4>Why doesn't FitBit have a search feature?</h4>
+					<p>I don't know! You should ask them!</p>
+				</li>
+				<li id="faq3">
+					<h4>I just made a group and I can't find it on here!</h4>
+					<p>I scrape FitBit's server about everyday so please wait at least 24 hours 
+					for your group will show up.</p>
+				</li>
+				<li id="faq4">
+					<h4>I got an issue or suggestion</h4>
+					<p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB">FitBit Group Search</a> 
+					and create a topic discussion or email me at <u>admin [at] relliker.com</u></p>
+				</li>
+				<li id="faq5">
+					<h4>Why is this website called Relliker.com?</h4>
+					<p>I don't know. It was just a domain name I bought... I'll buy a better one eventually.</p>
+				</li>
+				<li id="faq6">
+					<h4>Why are there ads?</h4>
+					<p>Well, since this website is a side project for me an I am paying for all hosting costs, I 
+					want to offset some of the costs by putting Google Adsense Ads on the site. Some people do not 
+					like this but it's something I have to do to not shut down the site.</p>
+				</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div style="min-height:8em;text-align:center">
 <?php
 	if (!defined("LOCALHOST")) {
 		$googleAdsense = <<<ADSENSE
@@ -112,18 +133,11 @@ ADSENSE;
 		echo(getAdBlock(728,90));
 	}
 ?>
-				</div>
-				<div style="height:100px"></div>
-    			<div id="contentfooter">
-    				<p>Join the <a href="http://www.fitbit.com/group/229YCB" target="_blank">FitBit Group Search</a>! <a href="http://beta.relliker.com/">Try out the new Relliker!</a></p>
-    			</div>
-		    </div>
-	    </div>
-	<div id="siteinfowrapper">
-		<footer id="siteinfo">
-			
-		</footer>
+			<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
+		</div>
 	</div>
-	</div>
+</div>
+<?php include_once("includes/footer.php"); ?>
 </body>
+
 </html>

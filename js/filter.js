@@ -3,37 +3,28 @@
 }
 
 function getGroupItem(data) {
-	var mainElement = $('<li class="groupitem"></li>');
+	var mainElement = $('<tr></tr>');
 	
-	$('<a class="groupname textlimit" target="_blank"></a>').attr("href", "http://www.fitbit.com" + data.url).html(data.name).appendTo(mainElement);
-	$('<span class="totalmembers"></span>').html(data.members + " Members").appendTo(mainElement); //
-	$('<p class="description textlimit4"></p>').attr("title", data.description).html(data.description).appendTo(mainElement); //
+	//Tack on memebers
+	$('<td></td>').html('<span class="label label-info">'+data.members+'</span>').appendTo(mainElement);
 	
-	// Add extras div
-	var extras = $('<div class="popover"></div>').appendTo(mainElement);
-	$('<p></p>').html("<strong>Steps:</strong> "+data.esteps+" steps").appendTo(extras);
-	$('<p></p>').html("<strong>Active Points:</strong> "+data.eactivepoints+" pts").appendTo(extras);
-	$('<p></p>').html("<strong>Distance:</strong> "+data.edistance+" miles").appendTo(extras);
-	$('<p></p>').html("<strong>Very Active:</strong> "+data.everyactive+" minutes").appendTo(extras);
+	// Tack on main info
+	//var title = $('').attr("href",  + ).html();
+	//var description = $('<p></p>').attr("title", data.description).html(data.description);
+	$('<td></td>').html('<a target="_blank" href="http://www.fitbit.com'+data.url+'">'+data.name+'</a><br/>'+data.description).appendTo(mainElement);
 	
-	$(mainElement).mouseenter(function() {
-		$(mainElement).popover({
-			trigger: 'hover',
-			position: "top",
-			verticalOffset: -15,
-			title: false,
-			content: extras//,
-			//classes: "wider"
-		});
-	});
-
+	// Add extras (Change colors later)
+	$('<td></td>').html('<span class="label">'+data.esteps+'</span>').appendTo(mainElement);
+	$('<td></td>').html('<span class="label label-success">'+data.eactivepoints+'</span>').appendTo(mainElement);
+	$('<td></td>').html('<span class="label label-warning">'+data.edistance+'</span>').appendTo(mainElement);
+	$('<td></td>').html('<span class="label label-important">'+data.everyactive+'</span>').appendTo(mainElement);
+	
 	return mainElement;
 }
 
 function getResults(data) {
     var filterType = $('input[name=type]:checked', '.tInput').attr('placeholder');
     if (filterType) {
-    	$('#typeOut').html(' / '+filterType);
     	$.getJSON('api/filter.php', data, function(data) {
     		clearResults();
     		var items = [];
@@ -41,20 +32,12 @@ function getResults(data) {
     		$.each(data, function(key, val) {
     			items.push(getGroupItem(val));
     		});
-    		
-    		
-    		var mainResults = $('<div id="publicgroups"></div>');
-    		var sectionGroups = $('<div class="section groups"></div>').appendTo(mainResults);
-    		var results = $('<ul class="grouplist"></ul>').appendTo(sectionGroups);
-    		
+    		    		
     		$.each(items, function(index, item) {
     		//console.log(item);
-    			$(item).appendTo(results);
+    			$(item).appendTo('#filterResults');
     		});
-    		
-    		$(mainResults).appendTo('#filterResults');
     	});
-    	$.setTextLimits();
 	}
 }
 
@@ -62,7 +45,8 @@ function updateData() {
 	var selected = $('input[name=type]:checked', '.tInput').val();
 	if (selected) {
     	clearResults();
-    	$('#filterResults').append($('<p class="innerpading"><br/>Please wait...</p>'));
+    	$('#filterResults').append($('<tr><td colspan="6">Please wait...</td></tr>'));
+    	$('#filterResults').append($('<tr><td colspan="6"><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></td></tr>'));
     	getResults({
     		f: selected,
     		limit: $('#shownumber').val()
