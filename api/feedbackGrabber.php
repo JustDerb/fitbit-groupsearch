@@ -8,11 +8,11 @@ class feedbackGrabber {
 		else
 			$pointsOrdering = "ASC";
 $query = <<<FBQUERY
-		SELECT F.*, SUM(V.value) as "points"
+		SELECT F.*, COALESCE(SUM(V.value),0) as "points"
 		FROM  `feedback` F LEFT JOIN `feedbackvotes` V
 		ON F.id = V.feedbackid
 		GROUP BY F.id
-		ORDER BY SUM(V.value) {$pointsOrdering}
+		ORDER BY COALESCE(SUM(V.value),0) {$pointsOrdering}
 FBQUERY;
 
 		global $st_sql;
