@@ -72,7 +72,7 @@ function fitbit_getPage($ch, $url) {
 
 function fitbit_getGroupsPageExtras($ch, $group)
 {
-	echo date('m/d/Y H:i:s')."Extras: ".$group."\n";
+	echo date('m/d/Y H:i:s')." Extras: ".$group."\n";
 	$extras = array();
 	$stripchars = array(",");
 	$pattern = '/[\d,.]+/i';

@@ -85,7 +85,7 @@ function stripSpacesOut($text)
 	$prevPageSet = -1;
 	while ($pageNum < 2600)
 	{
-		echo date('m/d/Y H:i:s')."Memory used: ".memory_get_usage()."\n";
+		echo date('m/d/Y H:i:s')." Memory used: ".memory_get_usage()."\n";
 		echo "PageNum: ".$pageNum."\n";
 		$result = fitbit_getGroupsPage($ch, $pageNum);
 		//echo($result);
