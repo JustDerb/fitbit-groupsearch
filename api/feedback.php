@@ -12,7 +12,7 @@ if (isset($_POST['feedback']))
 	if (strlen($_POST['feedback']) > $charMin)
 	{
 		// Default to remark
-		$type = "Remark";
+		$type = "";
 		if (isset($_POST['feedbackType']))
 		{
 			if (strcasecmp($_POST['feedbackType'], "Idea") == 0)
@@ -27,40 +27,64 @@ if (isset($_POST['feedback']))
 			{
 				$type = "Problem";
 			}
-		}
 		
-		$private = 0;
-		if (isset($_POST['private']))
-		{
-			if (strcasecmp($_POST['private'], "true") == 0)
+			if (!empty($type))
 			{
-				$private = 1;
-			}
-		}
-		
-		$email = "";
-		if (isset($_POST['email'])) {
-			$email = st_mysql_encode($_POST['email'], $st_sql);
-		}
-		
-		$title = st_mysql_encode($_POST['feedback'], $st_sql);
-		
-		$query = "INSERT INTO feedback (`id`, `title`, `type`, `private`, `added`, `email`) VALUES (NULL, '$title', '$type', '$private', NOW(), '$email');";
-		$result = mysql_query($query, $st_sql);
-		
-		if ($result) {
-			if ($private)
-			{
-				$status = "Your feedback has been sent to the admin.";
+				// Optional
+				$private = 0;
+				if (isset($_POST['private']))
+				{
+					if (strcasecmp($_POST['private'], "true") == 0)
+					{
+						$private = 1;
+					}
+				}
+				
+				// Optional
+				$email = "";
+				if (isset($_POST['email'])) {
+					$email = st_mysql_encode($_POST['email'], $st_sql);
+				}
+
+				require_once('../includes/recaptchalib.php');
+				require_once('../nogit/captcha.php');
+				$resp = recaptcha_check_answer ($CAPTCHA_privatekey,
+					$_SERVER["REMOTE_ADDR"],
+					$_POST["recaptcha_challenge_field"],
+					$_POST["recaptcha_response_field"]);
+
+				if (!$resp->is_valid) {
+					$error = "The reCAPTCHA wasn't entered correctly. Go back and try it again.";
+				} else {
+					$title = st_mysql_encode($_POST['feedback'], $st_sql);
+					
+					$query = "INSERT INTO feedback (`id`, `title`, `type`, `private`, `added`, `email`) VALUES (NULL, '$title', '$type', '$private', NOW(), '$email');";
+					$result = mysql_query($query, $st_sql);
+					
+					if ($result) {
+						if ($private)
+						{
+							$status = "Your feedback has been sent to the admin.";
+						}
+						else
+						{
+							$status = "Your feedback has been added.";
+						}
+					}
+					else
+					{
+						$error = "There was an error adding your feedback.";
+					}
+				}
 			}
 			else
 			{
-				$status = "Your feedback has been added.";
+				$error = "Please select a type of feedback.";
 			}
 		}
 		else
 		{
-			$error = "There was an error adding your feedback.";
+			$error = "Please select a type of feedback.";
 		}
 	}
 	else
@@ -70,6 +94,18 @@ if (isset($_POST['feedback']))
 }
 
 $queryString = "?status=".urlencode($status)."&error=".urlencode($error);
-header('location:../feedback.php'.htmlentities($queryString));
+// Only post back form if there are errors
+if (!empty($error)) 
+{
+	if (isset($_POST['feedback']))
+		$queryString .= "&f=".urlencode($_POST['feedback']);
+	if (isset($_POST['feedbackType']))
+		$queryString .= "&ft=".urlencode($_POST['feedbackType']);
+	if (isset($_POST['private']))
+		$queryString .= "&p=".urlencode($_POST['private']);
+	if (isset($_POST['email']))
+		$queryString .= "&e=".urlencode($_POST['email']);
+}
+header('location:../feedback.php'.$queryString);
 exit();
 ?>

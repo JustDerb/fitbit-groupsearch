@@ -53,29 +53,36 @@ require_once ('includes/analytics.php');
 			<form method="post" action="api/feedback.php">
 				<fieldset style="width: 100%">
 				<legend>Feedback</legend>
-				<textarea class="input-block-level" placeholder="Enter feedback here" rows="3" name="feedback" required="required"></textarea>
+				<textarea class="input-block-level" placeholder="Enter feedback here" rows="3" name="feedback" required="required"><?php if (isset($_GET['f']))	echo ($_GET['f']); ?></textarea>
 				<div id="feedbackTypes">
 					<label class="caption">Feedback type:</label>
 					<label class="radio">
-						<input type="radio" name="feedbackType" id="feedback1" value="Idea" checked>
+						<input type="radio" name="feedbackType" id="feedback1" value="Idea" <?php if (isset($_GET['ft']) && strcasecmp($_GET['ft'], "Idea") == 0) echo("checked"); ?>>
 						<span><i class="icon-star"></i> Idea</span>
 					</label>
 					<label class="radio">
-						<input type="radio" name="feedbackType" id="feedback2" value="Remark">
+						<input type="radio" name="feedbackType" id="feedback2" value="Remark" <?php if (isset($_GET['ft']) && strcasecmp($_GET['ft'], "Remark") == 0) echo("checked"); ?>>
 						<span><i class="icon-briefcase"></i> Remark</span>
 					</label>
 					<label class="radio">
-						<input type="radio" name="feedbackType" id="feedback2" value="Problem">
+						<input type="radio" name="feedbackType" id="feedback2" value="Problem" <?php if (isset($_GET['ft']) && strcasecmp($_GET['ft'], "Problem") == 0) echo("checked"); ?>>
 						<span><i class="icon-exclamation-sign"></i> Problem</span>
 					</label>
 				</div>
 				<br/>
-				<input class="input-block-level" type="email" placeholder="Email address for inquiries..." name="email">
+				<input class="input-block-level" type="email" placeholder="Email address for inquiries..." name="email" value="<?php if (isset($_GET['e'])) echo($_GET['e']); ?>">
 				<br/>
 				<label class="checkbox muted">
-					<input type="checkbox" value="true" name="private">
+					<input type="checkbox" value="true" name="private" <?php if (isset($_GET['p']) && strcasecmp($_GET['p'], "true") == 0) echo("checked"); ?>>
 					Send as private feedback (it will be submitted in the system, but will not show up publicly)
 				</label>
+				<div id="captcha">
+					<?php
+						require_once('includes/recaptchalib.php');
+						require_once('nogit/captcha.php');
+						echo(recaptcha_get_html($CAPTCHA_publickey));
+					?>
+				</div>
 				<button class="btn btn-primary pull-right" type="submit">Submit</button>
 				</fieldset>
 			</form>
@@ -92,7 +99,7 @@ require_once ('includes/analytics.php');
 			if (isset($_GET['error']) && !empty($_GET['error'])) {
 				$error = urldecode($_GET['error']);
 $errorMessage = <<<ERROR
-			<div class="alert alert-block">
+			<div class="alert alert-error">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Error!</h4>
 				{$error}
