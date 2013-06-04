@@ -1,7 +1,7 @@
 <?php
-require_once '../nogit/fitbit_login.php';
+require_once '../../nogit/fitbit_login.php';
 require_once 'simple_html_dom.php';
-require_once 'sql_functions.php';
+require_once '../sql_functions.php';
 
 // Cookie file for cURL
 $dir = dirname(__FILE__);
@@ -79,17 +79,26 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysVeryActive($group)); 
+	$extras['veryactive'] = "0";
 	
 	// Create DOM from URL
 	$html = str_get_html($result);
 	unset($result);
 	
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['veryactive'] = trim(str_replace($stripchars, "", $matches[0]));
-	if (empty($extras['veryactive'])) {
-		$extras['veryactive'] = "0";
-	}	
+	$subject = $html->find('div[id=groupAggregate]', 0);
+	if ($subject)
+	{
+		$subject = $subject->plaintext;
+		preg_match($pattern, $subject, $matches);
+		if (sizeof($matches) > 0)
+		{
+			$extras['veryactive'] = trim(str_replace($stripchars, "", $matches[0]));
+			if (empty($extras['veryactive'])) {
+				$extras['veryactive'] = "0";
+			}	
+		}
+	}
+
 	$html->clear();
 	unset($html);
 	unset($matches);
@@ -98,16 +107,25 @@ function fitbit_getGroupsPageExtras($ch, $group)
 	
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysSteps($group)); 
+	$extras['steps'] = "0";
 	
 	// Create DOM from URL
 	$html = str_get_html($result);
 	unset($result);
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['steps'] = trim(str_replace($stripchars, "", $matches[0]));
-	if (empty($extras['steps'])) {
-		$extras['steps'] = "0";
+	$subject = $html->find('div[id=groupAggregate]', 0);
+	if ($subject)
+	{
+		$subject = $subject->plaintext;
+		preg_match($pattern, $subject, $matches);
+		if (sizeof($matches) > 0)
+		{
+			$extras['steps'] = trim(str_replace($stripchars, "", $matches[0]));
+			if (empty($extras['steps'])) {
+				$extras['steps'] = "0";
+			}
+		}
 	}
+
 	$html->clear();
 	unset($html);
 	unset($matches);
@@ -116,17 +134,26 @@ function fitbit_getGroupsPageExtras($ch, $group)
 
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysActivityPoints($group)); 
+	$extras['activepoints'] = "0";
 	
 	// Create DOM from URL
 	$html = str_get_html($result);
 	unset($result);
 	
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['activepoints'] = str_replace($stripchars, "", $matches[0]);
-	if (empty($extras['activepoints'])) {
-		$extras['activepoints'] = "0";
+	$subject = $html->find('div[id=groupAggregate]', 0);
+	if ($subject)
+	{
+		$subject = $subject->plaintext;
+		preg_match($pattern, $subject, $matches);
+		if (sizeof($matches) > 0)
+		{
+			$extras['activepoints'] = str_replace($stripchars, "", $matches[0]);
+			if (empty($extras['activepoints'])) {
+				$extras['activepoints'] = "0";
+			}	
+		}
 	}
+
 	$html->clear();
 	unset($html);
 	unset($matches);
@@ -135,17 +162,26 @@ function fitbit_getGroupsPageExtras($ch, $group)
 
 	// -------------------------------------------------------------------------
 	$result = fitbit_getPage($ch, get30DaysDistance($group)); 
+	$extras['distance'] = "0";
 	
 	// Create DOM from URL
 	$html = str_get_html($result);
 	unset($result);
 	
-	$subject = $html->find('div[id=groupAggregate]', 0)->plaintext;
-	preg_match($pattern, $subject, $matches);
-	$extras['distance'] = str_replace($stripchars, "", $matches[0]);
-	if (empty($extras['distance'])) {
-		$extras['distance'] = "0";
+	$subject = $html->find('div[id=groupAggregate]', 0);
+	if ($subject)
+	{
+		$subject = $subject->plaintext;
+		preg_match($pattern, $subject, $matches);
+		if (sizeof($matches) > 0)
+		{
+			$extras['distance'] = str_replace($stripchars, "", $matches[0]);
+			if (empty($extras['distance'])) {
+				$extras['distance'] = "0";
+			}
+		}
 	}
+	
 	$html->clear();
 	unset($html);
 	unset($matches);
@@ -182,12 +218,24 @@ function stripSpacesOut($text)
 			$infoQuery .= " veryactive='".$extras['veryactive']."' ";
 			$infoQuery .= " WHERE groupid='".$row['groupid']."'";
 			
-			unset($extras);
-			
 			echo 'Updating...';
 			$infoResult = mysql_query($infoQuery, $st_sql);
+			
+			//===============================================
+			// NEW TABLE UPDATE
+			$groupMetaQuery  = "INSERT INTO `groupsmetafitbit` ";
+			$groupMetaQuery .= "(`id`, `added`, `members`, `stat30steps`, `stat30activepoints`, `stat30distance`, `stat30veryactive`, `activity`) ";
+			$groupMetaQuery .= "VALUES ('".$row['groupid']."', ";
+			$groupMetaQuery .= "NOW(), '-1', ";
+			$groupMetaQuery .= "'".$extras['steps']."', '".$extras['activepoints']."', '".$extras['distance']."', '".$extras['veryactive']."', '0') ";
+			$infoResult2 = mysql_query($groupMetaQuery, $st_sql);
+			//===============================================
+			
+			
+			unset($extras);
+			
 			// Did we error?
-			if (!$infoResult)
+			if (!$infoResult || !$infoResult2)
 			{
 				echo "\n".$infoQuery;
 				echo "\n\n".mysql_error($st_sql);
