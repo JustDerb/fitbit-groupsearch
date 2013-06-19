@@ -14,7 +14,7 @@ function search_basic($search)
 	return $query;
 }
 
-function search_keywordMatch($search)
+function search_keywordMatch($search, $sorting = "")
 {
 	//Get rid of punctuation
 	$punctuation = array(",", "!", ".");
@@ -72,7 +72,9 @@ function search_keywordMatch($search)
 	$query .= ") as t \n";
 	$query .= "group by \n";
 	$query .= "    id, url \n";
-	$query .= "ORDER BY max( weight ) DESC , id ASC \n";
+	$query .= "ORDER BY ";
+	$query .= $sorting;
+	$query .= " max( weight ) DESC , id ASC \n";
 	
 	return $query;
 

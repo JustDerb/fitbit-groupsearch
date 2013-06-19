@@ -8,6 +8,30 @@ $G_DESCRIPTION = "A group search tool for fitbit.";
 require_once ('includes/page_timer.php');
 $timer = new page_timer();
 $timer -> start();
+
+// Get page number
+if (is_int2(@$_GET['p']))
+{
+	$pageNum = st_mysql_encode($_GET['p'],$st_sql);
+}
+else
+{
+	$pageNum = 0;
+}
+// Get search terms
+$searchTerms = $_GET['s'];
+
+// Get sorting options
+if (isset($_GET['sort']))
+{
+	$sort = $_GET['sort'];
+	$clearSort = true;
+}
+else
+{
+	$sort = "";
+	$clearSort = false;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -126,7 +150,14 @@ ADSENSE;
 		</div>
 		<div class="span9">
 <?php if (isset($_GET['s'])): ?>
-			<h4>Results for "<strong><?php echo(htmlentities($_GET['s'])); ?></strong>"</h4>
+			<h4>Results for "<strong><?php echo(htmlentities($_GET['s'])); ?></strong>"
+			<?php
+				if ($clearSort)
+				{
+					echo ('<a href="?s='.$searchTerms.'&p='.$pageNum.'"><span class="label label-info"><i class="icon-remove icon-white"></i> Clear sorting</span></a>');
+				}
+			?>
+			</h4>
 			<table class="table table-hover">
 				<colgroup>
 					<col span="1" style="width: 10%">
@@ -138,29 +169,91 @@ ADSENSE;
 				</colgroup>
 				<thead>
 					<tr>
-						<th>Members</th>
+						<?php
+							// Sort defaults
+							$sortMembers =  "membersD";
+							$sortMembersIcon = "";
+							$sortSteps =  "stepsD";
+							$sortStepsIcon = "";
+							$sortActivePoints =  "activepointsD";
+							$sortActivePointsIcon = "";
+							$sortDistance =  "distanceD";
+							$sortDistanceIcon = "";
+							$sortVeryActive =  "veryactiveD";
+							$sortVeryActiveIcon = "";
+							$sortSQL = "";
+							
+							switch ($sort)
+							{
+								case 'membersD':
+									$sortMembers =  "membersA";
+									$sortMembersIcon = "<i class='icon-chevron-down'></i> ";
+									$sortSQL = "members DESC, ";
+								break;
+								case 'membersA':
+									$sortMembers =  "membersD";
+									$sortMembersIcon = "<i class='icon-chevron-up'></i> ";
+									$sortSQL = "members ASC, ";
+								break;
+								case 'stepsD':
+									$sortSteps =  "stepsA";
+									$sortStepsIcon = "<i class='icon-chevron-down'></i> ";
+									$sortSQL = "steps DESC, ";
+								break;
+								case 'stepsA':
+									$sortSteps =  "stepsD";
+									$sortStepsIcon = "<i class='icon-chevron-up'></i> ";
+									$sortSQL = "steps ASC, ";
+								break;
+								case 'activepointsD':
+									$sortActivePoints =  "activepointsA";
+									$sortActivePointsIcon = "<i class='icon-chevron-down'></i> ";
+									$sortSQL = "activepoints DESC, ";
+								break;
+								case 'activepointsA':
+									$sortActivePoints =  "activepointsD";
+									$sortActivePointsIcon = "<i class='icon-chevron-up'></i> ";
+									$sortSQL = "activepoints ASC, ";
+								break;
+								case 'distanceD':
+									$sortDistance =  "distanceA";
+									$sortDistanceIcon = "<i class='icon-chevron-down'></i> ";
+									$sortSQL = "distance DESC, ";
+								break;
+								case 'distanceA':
+									$sortDistance =  "distanceD";
+									$sortDistanceIcon = "<i class='icon-chevron-up'></i> ";
+									$sortSQL = "distance ASC, ";
+								break;
+								case 'veryactiveD':
+									$sortVeryActive =  "veryactiveA";
+									$sortVeryActiveIcon = "<i class='icon-chevron-down'></i> ";
+									$sortSQL = "veryactive DESC, ";
+								break;
+								case 'veryactiveA':
+									$sortVeryActive =  "veryactiveD";
+									$sortVeryActiveIcon = "<i class='icon-chevron-up'></i> ";
+									$sortSQL = "veryactive ASC, ";
+								break;
+							}
+							
+							$headerLinks = <<<SORTING
+						<th><a href="?s={$searchTerms}&p={$pageNum}&sort={$sortMembers}">{$sortMembersIcon}Members</a></th>
 						<th>Group Name / Description</th>
-						<th>Steps</th>
-						<th>Active Points</th>
-						<th>Distance (miles)</th>
-						<th>Very Active (minutes)</th>
+						<th><a href="?s={$searchTerms}&p={$pageNum}&sort={$sortSteps}">{$sortStepsIcon}Steps</a></th>
+						<th><a href="?s={$searchTerms}&p={$pageNum}&sort={$sortActivePoints}">{$sortActivePointsIcon}Active Points</a></th>
+						<th><a href="?s={$searchTerms}&p={$pageNum}&sort={$sortDistance}">{$sortDistanceIcon}Distance (miles)</a></th>
+						<th><a href="?s={$searchTerms}&p={$pageNum}&sort={$sortVeryActive}">{$sortVeryActiveIcon}Very Active (minutes)</a></th>
+SORTING;
+							echo($headerLinks);
+						?>
 					</tr>
 				</thead>
 				<tbody>
 				<?php
 					// Lets search!
 					//if (@$_GET['s'])
-					//{
-						// Get page number
-						if (is_int2(@$_GET['p']))
-						{
-							$pageNum = st_mysql_encode($_GET['p'],$st_sql);
-						}
-						else
-						{
-							$pageNum = 0;
-						}
-							
+					//{							
 						// Protect ourselves
 						$_GET['s'] = stripslashes($_GET['s']);
 						$search = st_mysql_encode($_GET['s'],$st_sql);
@@ -168,7 +261,7 @@ ADSENSE;
 						// Search
 						$searchAPI = new fitbitSearch();
 						$numOfItems = 50;
-						$searchResults = $searchAPI->search($search,$pageNum,$numOfItems);	
+						$searchResults = $searchAPI->search($search,$pageNum,$numOfItems,$sortSQL);	
 						
 						$resultNum = 0;
 						$numAds = 0;

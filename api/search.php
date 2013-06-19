@@ -43,12 +43,12 @@ function getColorHTML($value, $min, $max) {
 class fitbitSearch {
 	private $total = -1;
 
-	public function search($searchTerms, $pageNum=0,$numOfItems=24) {
+	public function search($searchTerms, $pageNum=0, $numOfItems=24, $sorting = "") {
 		global $st_sql;
 	
 		$startGroup = $pageNum*$numOfItems;
 		
-		$baseQuery = search_keywordMatch($searchTerms);
+		$baseQuery = search_keywordMatch($searchTerms, $sorting);
 		$query =  "select id, name, description, members, url, steps, activepoints, distance, veryactive ".$baseQuery;
 		
 		$totalItemsQ = "SELECT COUNT( * ) AS total from ( \n".$query." ) as tt";
@@ -57,7 +57,7 @@ class fitbitSearch {
 		$this->total = $row['total'];
 		
 		$query .= " LIMIT ".$startGroup." , ".$numOfItems;
-		
+				
 		$result = mysql_query($query, $st_sql);
 		
 		$retResults = array();
