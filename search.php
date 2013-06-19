@@ -150,6 +150,10 @@ ADSENSE;
 		</div>
 		<div class="span9">
 <?php if (isset($_GET['s'])): ?>
+			<div class="alert alert-info">
+				<strong>Hey You!</strong> Did you know you can now sort your results? Try it by clicking one of the headers!
+				Try <a href="<?php echo("?s={$searchTerms}&p={$pageNum}&sort=membersD"); ?>">sorting by members</a> now!
+			</div>
 			<h4>Results for "<strong><?php echo(htmlentities($_GET['s'])); ?></strong>"
 			<?php
 				if ($clearSort)
