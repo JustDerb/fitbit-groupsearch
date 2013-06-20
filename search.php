@@ -18,8 +18,16 @@ else
 {
 	$pageNum = 0;
 }
+
 // Get search terms
-$searchTerms = $_GET['s'];
+if (isset($_GET['s']))
+{
+	$searchTerms = $_GET['s'];
+}
+else
+{
+	$searchTerms = "";
+}
 
 // Get sorting options
 if (isset($_GET['sort']))
