@@ -1,3 +1,11 @@
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=350050445089720";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <!-- Navbar -->
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
@@ -23,6 +31,10 @@
 				</li>
 				-->
 			</ul>
+			<div class="pull-right" id="socialbuttons" style="padding:10px 0px;overflow:hidden;max-height:20px">
+				<div class="fb-like" data-href="http://www.relliker.com/" data-send="true" data-layout="button_count" data-width="400" data-show-faces="false" data-action="recommend"></div>
+				<div class="g-plusone" data-size="medium" data-href="www.relliker.com"></div>
+			</div>
 		</div>
 	</div>
 </div>

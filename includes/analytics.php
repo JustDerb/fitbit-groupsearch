@@ -1,3 +1,4 @@
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 <!-- Google Analytics -->
 <script type="text/javascript">
 
