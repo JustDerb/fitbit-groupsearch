@@ -57,7 +57,7 @@ body { padding-top: 40px; }
       if (false): ?>
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
-  google.load('visualization', '1', {packages:['gauge']});
+  google.load('visualization', '1', {packages:['gauge', 'corechart']});
   google.setOnLoadCallback(drawChart);
   function drawChart() {
     var data = google.visualization.arrayToDataTable([
@@ -137,8 +137,59 @@ ADSENSE;
 				</div>
 			</div>
 			<div class="row-fluid">
+				<div style="min-height:8em;text-align:center;margin-top:1em">
+<?php
+	if (!defined("LOCALHOST")) {
+		$googleAdsense = <<<ADSENSE
+					<script type="text/javascript"><!--
+					google_ad_client = "ca-pub-8861318913253064";
+					/* Footer Ad (Long) */
+					google_ad_slot = "5970958017";
+					google_ad_width = 728;
+					google_ad_height = 90;
+					//-->
+					</script>
+					<script type="text/javascript"
+					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+					</script>
+ADSENSE;
+		echo($googleAdsense);
+	}
+	else
+	{
+		echo(getAdBlock(728,90));
+	}
+?>
+					<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
+				</div>
+			</div>
+			<div class="row-fluid">
 				<div class="span12">
-
+					<h4><i class="icon-time"></i> Latest stats (30 days average):</h4>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Steps</th>
+								<th>Active Points</th>
+								<th>Distance (miles)</th>
+								<th>Very Active (minutes)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="label"><?php echo($groupObj->getLatestSteps()); ?></span></td>
+								<td><span class="label label-success"><?php echo($groupObj->getLatestActivePoints()); ?></span></td>
+								<td><span class="label label-warning"><?php echo($groupObj->getLatestDistance()); ?></span></td>
+								<td><span class="label label-important"><?php echo($groupObj->getLatestVeryActive()); ?></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<h4><i class="icon-road"></i> Stats History (30 days average):</h4>
+					<p>Google chart goes here</p>
 				</div>
 			</div>
 <?php else: ?>
@@ -147,6 +198,33 @@ ADSENSE;
 			<div class="hero-unit">
 				<h1>No group found!</h1>
 				<p>Try searching for a group in the top right!</p>
+			</div>
+			<div class="row-fluid">
+				<div style="min-height:8em;text-align:center;margin-top:1em">
+<?php
+	if (!defined("LOCALHOST")) {
+		$googleAdsense = <<<ADSENSE
+					<script type="text/javascript"><!--
+					google_ad_client = "ca-pub-8861318913253064";
+					/* Footer Ad (Long) */
+					google_ad_slot = "5970958017";
+					google_ad_width = 728;
+					google_ad_height = 90;
+					//-->
+					</script>
+					<script type="text/javascript"
+					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+					</script>
+ADSENSE;
+		echo($googleAdsense);
+	}
+	else
+	{
+		echo(getAdBlock(728,90));
+	}
+?>
+					<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
+				</div>
 			</div>
 <?php endif ?>
 		</div>
