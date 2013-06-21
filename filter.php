@@ -78,7 +78,6 @@ require_once ('includes/analytics.php');
 						<option value="30">First 30</option>
 						<option value="60">First 60</option>
 						<option value="90">First 90</option>
-						<option value="-1">Show All</option>
 					</select>
 				</div>
 				</fieldset>
