@@ -13,8 +13,19 @@ class FitbitGroup {
 	private $str_name = "Undefined";
 	private $str_description = "No description";
 	private $int_members = 0;
+	
+	// 30 day stats (latest)
+	private $dbl_latestSteps;
+	private $dbl_latestActivePoints;
+	private $dbl_latestDistance;
+	private $dbl_latestVeryActive;
+
+	// Last updated in the database
 	private $dt_lastUpdatedInternal;
-	private $int_activeness;
+	private $dt_lastUpdatedForum;
+	
+	// TODO - Create algorithm to figure this out
+	private $int_activeness = 0;
 	
 	public function __construct($groupID) {
 		$this->groupID = $groupID;
@@ -40,8 +51,13 @@ class FitbitGroup {
 			$this->str_name = $data['name'];
 			$this->str_description = $data['description'];
 			$this->int_members = $data['members'];
-			$this->int_activeness = 0;
+			$this->dbl_latestSteps = $data['steps'];
+			$this->dbl_latestActivePoints = $data['activepoints'];
+			$this->dbl_latestDistance = $data['distance'];
+			$this->dbl_latestVeryActive = $data['veryactive'];
+
 			//$this->dt_lastUpdatedInternal = 0;
+			//$this->dt_lastUpdatedForum = 0;
 		}
 		else
 		{
@@ -68,6 +84,62 @@ class FitbitGroup {
 	public function getActiveness() {
 		return $this->int_activeness;
 	}
+	
+	public function getLatestSteps() {
+		return $this->dbl_latestSteps;
+	}
+	
+	public function getLatestActivePoints() {
+		return $this->dbl_latestActivePoints;
+	}
+
+	public function getLatestDistance() {
+		return $this->dbl_latestDistance;
+	}
+
+	public function getLatestVeryActive() {
+		return $this->dbl_latestVeryActive;
+	}
+	
+	private function getRange($daysBehind, $type) {
+		global $st_sql;
+		$groupID_encoded = st_mysql_encode($this->groupID, $st_sql);
+	
+		// Grab our SQL information
+		$groupQuery  = "SELECT added, ".$type." ";
+		$groupQuery .= "FROM  `groupsmetafitbit` ";
+		$groupQuery .= "WHERE  `id` = '".$groupID_encoded."' ";
+		
+		// TODO - Add $daysBehind
+		//$groupQuery .= "";
+				
+		$result = mysql_query($groupQuery, $st_sql);
+		
+		$resultsArr = array();
+		
+		while ($row = mysql_fetch_assoc($result)) {
+			$resultsArr[] = [$row['added'], $row[$type]];
+		}
+		
+		return $resultsArr;
+	}
+	
+	public function getRangeSteps($daysBehind = -1) {
+		return $this->getRange($daysBehind, 'stat30steps');
+	}
+	
+	public function getRangeActivePoints($daysBehind = -1) {
+		return $this->getRange($daysBehind, 'stat30activepoints');
+	}
+	
+	public function getRangeDistance($daysBehind = -1) {
+		return $this->getRange($daysBehind, 'stat30distance');
+	}
+	
+	public function getRangeVeryActive($daysBehind = -1) {
+		return $this->getRange($daysBehind, 'stat30veryactive');
+	}
+
 }
 
 ?>
