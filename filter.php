@@ -82,6 +82,33 @@ require_once ('includes/analytics.php');
 				</div>
 				</fieldset>
 			</form>
+			<div class="row-fluid hidden-phone">
+				<div class="span12" style="text-align:center;overflow:auto">
+<?php
+	if (!defined("LOCALHOST")) {
+		$googleAdsense = <<<ADSENSE
+			<script type="text/javascript"><!--
+			google_ad_client = "ca-pub-8861318913253064";
+			/* Skyscraper - General */
+			google_ad_slot = "5731148814";
+			google_ad_width = 300;
+			google_ad_height = 600;
+			//-->
+			</script>
+			<script type="text/javascript"
+			src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			</script>
+ADSENSE;
+		echo($googleAdsense);
+	}
+	else
+	{
+		echo(getAdBlock(300,600));
+	}
+?>
+					<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
+				</div>
+			</div>
 		</div>
 		<div class="span9" style="min-height:500px">
 			<h4>Choose your filters to see results</h4>
