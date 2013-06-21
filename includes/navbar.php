@@ -8,15 +8,15 @@
 				<button type="submit" class="btn btn-small btn-inverse"><i class="icon-search icon-white"></i></button>
 			</form>
 			<ul class="nav pull-right">
-				<li><a href="search.php">Search</a></li>
-				<li><a href="filter.php">Filter</a></li>
+				<li><a href="search.php"><i class="icon-search"></i> Search</a></li>
+				<li><a href="filter.php"><i class="icon-filter"></i> Filter</a></li>
 				<!--
-				<li><a href="forum/">Forum</a></li>
+				<li><a href="forum/"><i class="icon-comment"></i> Forum</a></li> 
 				-->
-				<li><a href="feedback.php">Feedback</a></li>
+				<li><a href="feedback.php"><i class="icon-bullhorn"></i> Feedback</a></li>
 				<!--
 				<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<b class="caret"></b></a>
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> Account<b class="caret"></b></a>
 				<ul class="dropdown-menu" role="menu">
 					<li><a href="#">Login</a></li>
 				</ul>
