@@ -370,6 +370,33 @@ FOOTER;
 				<p>Enter your search terms and begin finding your groups!</p>
 				<p><strong>Coming Soon!</strong> Be able to sort your results by number of members, and other statistics from fitbit!</p>
 			</div>
+			<div class="row-fluid">
+				<div style="min-height:8em;text-align:center;margin-top:1em">
+<?php
+	if (!defined("LOCALHOST")) {
+		$googleAdsense = <<<ADSENSE
+					<script type="text/javascript"><!--
+					google_ad_client = "ca-pub-8861318913253064";
+					/* Footer Ad (Long) */
+					google_ad_slot = "5970958017";
+					google_ad_width = 728;
+					google_ad_height = 90;
+					//-->
+					</script>
+					<script type="text/javascript"
+					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+					</script>
+ADSENSE;
+		echo($googleAdsense);
+	}
+	else
+	{
+		echo(getAdBlock(728,90));
+	}
+?>
+					<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
+				</div>
+			</div>
 <?php endif ?>
 		</div>
 	</div>
