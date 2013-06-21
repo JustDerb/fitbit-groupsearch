@@ -33,7 +33,7 @@
 			</ul>
 			<div class="pull-right" id="socialbuttons" style="padding:10px 0px;max-height:20px">
 				<div class="fb-like" data-href="http://www.relliker.com/" data-send="true" data-layout="button_count" data-width="400" data-show-faces="false" data-action="recommend"></div>
-				<div class="g-plusone" data-size="medium" data-href="www.relliker.com"></div>
+				<div class="g-plusone" data-size="medium" data-href="http://www.relliker.com/"></div>
 			</div>
 		</div>
 	</div>
