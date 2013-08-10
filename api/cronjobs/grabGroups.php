@@ -1,11 +1,11 @@
 <?php
-require_once '../nogit/fitbit_login.php';
+require_once '../../nogit/fitbit_login.php';
 require_once 'simple_html_dom.php';
-require_once 'sql_functions.php';
+require_once '../sql_functions.php';
 
 // Cookie file for cURL
 $dir = dirname(__FILE__);
-$cookie=$dir."/../nogit/fitbit_cookie"; 
+$cookie=$dir."/../../nogit/fitbit_cookie"; 
 
 function fitbit_login($ch, $username, $password)
 {

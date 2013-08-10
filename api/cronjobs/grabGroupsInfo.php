@@ -5,7 +5,7 @@ require_once '../sql_functions.php';
 
 // Cookie file for cURL
 $dir = dirname(__FILE__);
-$cookie=$dir."/../nogit/fitbit_cookie"; 
+$cookie=$dir."/../../nogit/fitbit_cookie"; 
 
 function get30DaysVeryActive($group) {
 	return "http://www.fitbit.com/stats/leaders?rankByStatistic=cum_mins_very_active_30_days&cnid=4.".$group."&includeViewerValues=false&start=0&count=3&extraStatistics=engaged_avg_mins_very_active_30_days&valueWhenNotAvailable=--&label=mins&updateRate=DAILY";
