@@ -56,13 +56,17 @@ class FitbitGroup {
 			$this->dbl_latestDistance = $data['distance'];
 			$this->dbl_latestVeryActive = $data['veryactive'];
 
-			//$this->dt_lastUpdatedInternal = 0;
+			$this->dt_lastUpdatedInternal = $data['updated'];
 			//$this->dt_lastUpdatedForum = 0;
 		}
 		else
 		{
 			throw new NoGroupFound('No group found by ID: '.$this->groupID);
 		}
+	}
+
+	public function getLastUpdateDateTime() {
+		return $this->dt_lastUpdatedInternal;
 	}
 	
 	public function getGroupID() {
@@ -111,7 +115,8 @@ class FitbitGroup {
 		$groupQuery .= "WHERE  `id` = '".$groupID_encoded."' ";
 		
 		// TODO - Add $daysBehind
-		//$groupQuery .= "";
+		if ($daysBehind > 0)
+			$groupQuery .= " AND added > DATE_ADD(NOW(), INTERVAL -30 DAY)";
 				
 		$result = mysql_query($groupQuery, $st_sql);
 		

@@ -6,38 +6,61 @@ header('Content-Type: application/javascript');
 
 $jsonResult = array();
 
-if (isset($_GET['g']) && 
-    isset($_GET['type']))
+if (isset($_GET['g']))// && 
+    //isset($_GET['type']))
 {
 	// Grab our group info
 	$group = NULL;
 	try
 	{
 		$group = new FitbitGroup($_GET['g']);
-	}
-	catch (NoGroupFound $ex)
-	{
-	}
-	
-	
-	if (isset($group))
-	{
-		// Found our group, grab our data
+		$valueName = "Unkown";
+		$result = array();
+
 		switch($_GET['type'])
 		{
 			case 'steps':
-				$jsonResult = $group->getRangeSteps();
+				$result = $group->getRangeSteps(30);
+				$valueName = "Steps";
 			break;
 			case 'activepoints':
-				$jsonResult = $group->getRangeActivePoints();
+				$result = $group->getRangeActivePoints(30);
+				$valueName = "Active Points";
 			break;
 			case 'distance':
-				$jsonResult = $group->getRangeDistance();
+				$result = $group->getRangeDistance(30);
+				$valueName = "Distance";
 			break;
 			case 'veryactive':
-				$jsonResult = $group->getRangeVeryActive();
+				$result = $group->getRangeVeryActive(30);
+				$valueName = "Very Active";
 			break;
 		}
+
+		$jsonResult = array(
+			'cols' => array(
+				array(
+					'label' => 'Date',
+					'type' => 'string'
+				),
+				array(
+					'label' => $valueName,
+					'type' => 'number'
+				)),
+			'rows' => array()
+			);
+
+		foreach ($result as $key => $value) {
+			$values = array();
+			$dateTime = strtotime($value[0]);
+			$values[] = array('v' => $dateTime, 'f' => date("m/d/y", $dateTime));
+			$values[] = array('v' => $value[1]);
+			$jsonResult['rows'][] = array('c' => $values);
+		}
+	}
+	catch (NoGroupFound $ex)
+	{
+		// Don't echo anything (we should really echo an error message)
 	}
 }
 

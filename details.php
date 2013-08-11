@@ -43,6 +43,9 @@ body { padding-top: 40px; }
 @media screen and (max-width: 768px) {
     body { padding-top: 0px; }
 }
+.g-graph {
+	min-height: 200px;
+}
 </style>
 <!-- Mobile friendly -->
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -53,13 +56,13 @@ body { padding-top: 40px; }
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <!-- End Bootstrap -->
 <!-- Custom javascript -->
-<?php //if (isset($groupObj)):
-      if (false): ?>
+<?php if (isset($groupObj)): ?>
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 <script type='text/javascript'>
   google.load('visualization', '1', {packages:['gauge', 'corechart']});
-  google.setOnLoadCallback(drawChart);
-  function drawChart() {
+  //google.setOnLoadCallback(drawActiveChart);
+  google.setOnLoadCallback(drawStatsChart);
+  function drawActiveChart() {
     var data = google.visualization.arrayToDataTable([
       ['Label', 'Value'],
       ['Activeness', <?php echo($groupObj->getActiveness()); ?>]
@@ -75,6 +78,43 @@ body { padding-top: 40px; }
 
     var chart = new google.visualization.Gauge(document.getElementById('chart_div_activeness'));
     chart.draw(data, options);
+  }
+  function drawStatsChartByCriteria(element, type) {
+  	console.log("Loading " + type);
+  	$.ajax({
+      url: "api/json/groupStats.php",
+      data: {
+      	'g': '<?php echo($groupObj->getGroupID()) ?>',
+      	'type' : type
+      },
+      dataType:"json",
+      async: true
+    }).done(function ( jsonData ) {
+    	console.log(jsonData);
+
+		var data = new google.visualization.DataTable(jsonData);
+
+	    var options = {
+	      animation:{
+	        duration: 1000,
+	        easing: 'out',
+	      },
+	      legend:{
+	      	position: 'none'
+	      }
+	    };
+
+	    var chart = new google.visualization.LineChart(element);
+	    chart.draw(data, options);
+	}).fail(function(msg) { 
+		element.innerHTML = 'Error loading graph :(';
+	});    
+  }
+  function drawStatsChart() {
+  	drawStatsChartByCriteria(document.getElementById('chart_div_stats_steps'), 'steps');
+  	drawStatsChartByCriteria(document.getElementById('chart_div_stats_activepoints'), 'activepoints');
+    drawStatsChartByCriteria(document.getElementById('chart_div_stats_distance'), 'distance');
+    drawStatsChartByCriteria(document.getElementById('chart_div_stats_veryactive'), 'veryactive');
   }
 </script>
 <?php endif ?>
@@ -126,41 +166,16 @@ ADSENSE;
 			<div class="row-fluid">
 				<div class="span8">
 					<h3><?php echo($groupObj->getName()); ?></h3>
-					<h5><?php echo($groupObj->getNumberOfMembers()); ?> members</h5>
+					<h5><a href="http://www.fitbit.com/group/<?php echo($groupObj->getGroupID()); ?>/members" target="_blank">
+						<?php echo($groupObj->getNumberOfMembers()); ?> members
+					</a></h5>
 					<p><?php echo($groupObj->getDescription()); ?></p>
-					<a href="http://www.fitbit.com/group/<?php echo($groupObj->getGroupID()); ?>" class="btn btn-large btn-primary" target="_blank">
+					<p><a href="http://www.fitbit.com/group/<?php echo($groupObj->getGroupID()); ?>" class="btn btn-large btn-primary" target="_blank">
 					Visit Group on Fitbit.com <i class="icon-chevron-right icon-white"></i>
-					</a>
+					</a></p>
 				</div>
 				<div class="span4" style="text-align:center">
-					<div id='chart_div_activeness'></div>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div style="min-height:8em;text-align:center;margin-top:1em">
-<?php
-	if (!defined("LOCALHOST")) {
-		$googleAdsense = <<<ADSENSE
-					<script type="text/javascript"><!--
-					google_ad_client = "ca-pub-8861318913253064";
-					/* Footer Ad (Long) */
-					google_ad_slot = "5970958017";
-					google_ad_width = 728;
-					google_ad_height = 90;
-					//-->
-					</script>
-					<script type="text/javascript"
-					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-					</script>
-ADSENSE;
-		echo($googleAdsense);
-	}
-	else
-	{
-		echo(getAdBlock(728,90));
-	}
-?>
-					<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
+					<div id='chart_div_activeness' style="margin:0 auto;display:block"></div>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -187,9 +202,24 @@ ADSENSE;
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span12" style="min-height:300px">
 					<h4><i class="icon-road"></i> Stats History (30 days average):</h4>
-					<p>Google chart goes here</p>
+					<h5>Steps</h5>
+					<div id="chart_div_stats_steps" class="g-graph">Loading...</div>
+					<h5>Active Points</h5>
+					<div id="chart_div_stats_activepoints" class="g-graph">Loading...</div>
+					<h5>Distance (miles)</h5>
+					<div id="chart_div_stats_distance" class="g-graph">Loading...</div>
+					<h5>Very Active (minutes)</h5>
+					<div id="chart_div_stats_veryactive" class="g-graph">Loading...</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<p class="muted"><i>
+						This group was last updated with our servers on <?php echo($groupObj->getLastUpdateDateTime()); ?>.
+						Want up to the minute fresh data? <a href="#">Click here.</a>
+					</i></p>
 				</div>
 			</div>
 <?php else: ?>
@@ -198,33 +228,6 @@ ADSENSE;
 			<div class="hero-unit">
 				<h1>No group found!</h1>
 				<p>Try searching for a group in the top right!</p>
-			</div>
-			<div class="row-fluid">
-				<div style="min-height:8em;text-align:center;margin-top:1em">
-<?php
-	if (!defined("LOCALHOST")) {
-		$googleAdsense = <<<ADSENSE
-					<script type="text/javascript"><!--
-					google_ad_client = "ca-pub-8861318913253064";
-					/* Footer Ad (Long) */
-					google_ad_slot = "5970958017";
-					google_ad_width = 728;
-					google_ad_height = 90;
-					//-->
-					</script>
-					<script type="text/javascript"
-					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-					</script>
-ADSENSE;
-		echo($googleAdsense);
-	}
-	else
-	{
-		echo(getAdBlock(728,90));
-	}
-?>
-					<p><a href="about.php#faq6" class="muted">Why are there ads?</a></p>
-				</div>
 			</div>
 <?php endif ?>
 		</div>

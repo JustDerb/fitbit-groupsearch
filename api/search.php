@@ -49,7 +49,7 @@ class fitbitSearch {
 		$startGroup = $pageNum*$numOfItems;
 		
 		$baseQuery = search_keywordMatch($searchTerms, $sorting);
-		$query =  "select id, name, description, members, url, steps, activepoints, distance, veryactive ".$baseQuery;
+		$query =  "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive ".$baseQuery;
 		
 		$totalItemsQ = "SELECT COUNT( * ) AS total from ( \n".$query." ) as tt";
 		$result = mysql_query($totalItemsQ, $st_sql);
@@ -65,6 +65,7 @@ class fitbitSearch {
 			$retResults[] = array("members" => $row['members'],
 									"title" => $row['name'],
 									"url" => $row['url'],
+									"groupid" => $row['groupid'],
 									"description" => $row['description'],
 									"steps" => $row['steps'],
 									"activepoints" => $row['activepoints'],

@@ -29,20 +29,20 @@ function search_keywordMatch($search, $sorting = "")
 	//Build query
 	$query = ", max(weight) from ( \n";
 	// Exact match
-	$query .= "select id, name, description, members, url, steps, activepoints, distance, veryactive, ".($weight+4)." weight \n";
+	$query .= "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive, ".($weight+4)." weight \n";
 	$query .= "from groups \n";
 	$query .= "    where name='".$search."' \n";
 	$query .= "union \n";
-	$query .= "select id, name, description, members, url, steps, activepoints, distance, veryactive, ".($weight+3)." weight \n";
+	$query .= "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive, ".($weight+3)." weight \n";
 	$query .= "from groups \n";
 	$query .= "    where description='".$search."' \n";
 	$query .= "union \n";
 	//Partial search
-	$query .= "select id, name, description, members, url, steps, activepoints, distance, veryactive, ".($weight+2)." weight \n";
+	$query .= "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive, ".($weight+2)." weight \n";
 	$query .= "from groups \n";
 	$query .= "    where name like '%".$search."%' \n";
 	$query .= "union \n";
-	$query .= "select id, name, description, members, url, steps, activepoints, distance, veryactive, ".($weight+1)." weight \n";
+	$query .= "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive, ".($weight+1)." weight \n";
 	$query .= "from groups \n";
 	$query .= "    where description like '%".$search."%' \n";
 	$query .= "union \n";
@@ -56,13 +56,13 @@ function search_keywordMatch($search, $sorting = "")
 		else
 			$first = false;
 						
-		$query .= "select id, name, description, members, url, steps, activepoints, distance, veryactive, ".($weight)." weight \n";
+		$query .= "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive, ".($weight)." weight \n";
 		$query .= "from groups \n";
 		$query .= "    where name like '%".$keyword."%' \n";
 
 		// Keyword match description
 		$query .= "union \n";
-		$query .= "select id, name, description, members, url, steps, activepoints, distance, veryactive, ".($weight-1)." weight \n";
+		$query .= "select id, name, description, members, url, groupid, steps, activepoints, distance, veryactive, ".($weight-1)." weight \n";
 		$query .= "from groups \n";
 		$query .= "    where description like '%".$keyword."%' \n";
 		
