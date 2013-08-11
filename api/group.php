@@ -123,7 +123,7 @@ class FitbitGroup {
 		$resultsArr = array();
 		
 		while ($row = mysql_fetch_assoc($result)) {
-			$resultsArr[] = [$row['added'], $row[$type]];
+			$resultsArr[] = array($row['added'], $row[$type]);
 		}
 		
 		return $resultsArr;
