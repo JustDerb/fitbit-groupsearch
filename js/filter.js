@@ -11,7 +11,7 @@ function getGroupItem(data) {
 	// Tack on main info
 	//var title = $('').attr("href",  + ).html();
 	//var description = $('<p></p>').attr("title", data.description).html(data.description);
-	$('<td></td>').html('<a target="_blank" href="http://www.fitbit.com'+data.url+'">'+data.name+'</a><br/>'+data.description).appendTo(mainElement);
+	$('<td></td>').html('<a href="details.php?g='+data.groupid+'">'+data.name+'</a><br/>'+data.description).appendTo(mainElement);
 	
 	// Add extras (Change colors later)
 	$('<td></td>').html('<span class="label">'+data.esteps+'</span>').appendTo(mainElement);

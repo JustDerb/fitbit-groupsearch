@@ -4,6 +4,7 @@ include_once '../api/sql_functions.php';
 function newItem($row) {
 	$result = array();
 	$result['url'] = $row['url'];
+	$result['groupid'] = $row['groupid'];
 	$result['name'] = $row['name'];
 	$result['members'] = $row['members'];
 	$result['description'] = $row['description'];
