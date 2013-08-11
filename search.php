@@ -368,8 +368,8 @@ FOOTER;
 			</div>
 			<div class="hero-unit">
 				<h1>Looking for something?</h1>
-				<p>Enter your search terms and begin finding your groups!</p>
-				<p><strong>Coming Soon!</strong> Be able to sort your results by number of members, and other statistics from fitbit!</p>
+				<p>Enter your search terms and begin finding your groups!
+				Then you'll be able to sort your results by number of members, and other statistics from fitbit!</p>
 			</div>
 			<div class="row-fluid">
 				<div style="min-height:8em;text-align:center;margin-top:1em">
