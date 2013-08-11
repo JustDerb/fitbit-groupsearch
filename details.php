@@ -80,7 +80,6 @@ body { padding-top: 40px; }
     chart.draw(data, options);
   }
   function drawStatsChartByCriteria(element, type) {
-  	console.log("Loading " + type);
   	$.ajax({
       url: "api/json/groupStats.php",
       data: {
@@ -90,8 +89,6 @@ body { padding-top: 40px; }
       dataType:"json",
       async: true
     }).done(function ( jsonData ) {
-    	console.log(jsonData);
-
 		var data = new google.visualization.DataTable(jsonData);
 
 	    var options = {
