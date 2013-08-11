@@ -215,7 +215,6 @@ ADSENSE;
 				<div class="span12">
 					<p class="muted"><i>
 						This group was last updated with our servers on <?php echo($groupObj->getLastUpdateDateTime()); ?>.
-						Want up to the minute fresh data? <a href="#">Click here.</a>
 					</i></p>
 				</div>
 			</div>
