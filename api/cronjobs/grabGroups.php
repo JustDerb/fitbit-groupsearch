@@ -7,6 +7,10 @@ require_once '../sql_functions.php';
 $dir = dirname(__FILE__);
 $cookie=$dir."/../../nogit/fitbit_cookie"; 
 
+// File descriptor for stderr (For quick logging)
+$stderr = fopen('php://stderr', 'w');
+function echoErr($message) { global $stderr; fwrite($stderr, $message."\n"); }
+
 function fitbit_login($ch, $username, $password)
 {
 	global $cookie;
@@ -77,13 +81,49 @@ function stripSpacesOut($text)
 	$text = preg_replace('/\s{2,}/',' ',$text);
 	return $text;
 }
+
+function setGroupCounter($number)
+{
+	global $st_sql;
+	$query = "UPDATE extrainfo SET valueInt='$number' WHERE keyId='groups_page'";
+	$result = mysql_query($query, $st_sql);
+    // Did we error?
+    if (!$result)
+    {
+    	echoErr("ERROR SETTING GROUP COUNTER!");
+    	echoErr(mysql_error($st_sql));
+    	return false;
+    }
+    return true;
+}
+
+function getGroupCounter()
+{
+	global $st_sql;
+	$query = "SELECT valueInt FROM extrainfo WHERE keyId='groups_page'";
+	$result = mysql_query($query, $st_sql);
+    // Did we error?
+    if ($result)
+    {
+    	$row = mysql_fetch_assoc($result);
+    	return $row['valueInt'];
+    }
+    else
+    {
+    	echoErr("ERROR GETTING GROUP COUNTER! Emitting 0");
+    	echoErr(mysql_error($st_sql));
+    	return 0;
+	}
+}
 	
 	$ch = curl_init(); 
 	fitbit_login($ch, $username,$password);
-	
-	$pageNum = 0;
+
+	$pageNum = getGroupCounter();
 	$prevPageSet = -1;
-	while ($pageNum < 2600)
+
+	echoErr("Starting at page: ".$pageNum);
+	while ($pageNum < 50000)
 	{
 		echo date('m/d/Y H:i:s')." Memory used: ".memory_get_usage()."\n";
 		echo "PageNum: ".$pageNum."\n";
@@ -156,13 +196,18 @@ function stripSpacesOut($text)
 				echo " | Next ?Start=: ".$matches[0][0]."\n";
 				if ($matches[0][0] == $prevPageSet) {
 					ECHO "Done. Exitting...";
+					setGroupCounter(0);
 					break;
 				}
 				$prevPageSet = $matches[0][0];
 				$pageNum++;
+				setGroupCounter($pageNum);
 			}
 			else
+			{
+				setGroupCounter(0);
 				break;
+			}
 		}
 			
 		// Clean up
