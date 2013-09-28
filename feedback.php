@@ -19,6 +19,7 @@ $timer -> start();
 <meta content="http://www.relliker.com/" property="og:url" />
 <meta content="<?php echo($G_DESCRIPTION); ?>" property="og:description" />
 <meta content="http://relliker.com/images/bg_branding_a.png" property="og:image" />
+<meta property="fb:admins" content="1173840925" />
 <!-- End OpenGraph -->
 <title><?php echo($G_TITLE); ?></title>
 <!-- Bootstrap -->
