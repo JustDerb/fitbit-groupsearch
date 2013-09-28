@@ -66,7 +66,7 @@ function fitbit_getGroupsPage($ch, $page) {
 	if ($page > 0)
 	{
 		// GET var for paging
-		$pageVar="?start=".($page*12);
+		$pageVar="?start=".($page);
 	}
 	else
 		$pageVar = "";
@@ -148,7 +148,7 @@ function getGroupCounter()
 			}
 			else
 			{
-				echo "ERROR: No member number found in: ".$members;
+				echoErr("ERROR: No member number found in: ".$members);
 				$error = true;
 				break;
 			}
@@ -190,8 +190,10 @@ function getGroupCounter()
 		
 		if (count($aTag) > 0)
 		{
-			preg_match_all('/\d+/', $aTag[count($aTag)-1]->href, $matches);
-			if (count($matches[0]) > 0)
+			$lastaTag = $aTag[count($aTag)-1];
+			preg_match_all('/\d+/', $lastaTag->href, $matches);
+			// Make sure we found numbers, and does not have 'previous' inside the text
+			if ((count($matches[0]) > 0) && (stristr($lastaTag->innertext, "previous") === FALSE))
 			{
 				echo " | Next ?Start=: ".$matches[0][0]."\n";
 				if ($matches[0][0] == $prevPageSet) {
@@ -200,11 +202,12 @@ function getGroupCounter()
 					break;
 				}
 				$prevPageSet = $matches[0][0];
-				$pageNum++;
+				$pageNum = $matches[0][0];
 				setGroupCounter($pageNum);
 			}
 			else
 			{
+				echoErr("Hit page ?start=".$pageNum." which looks like the end.  Reseting counter to 0.");
 				setGroupCounter(0);
 				break;
 			}
