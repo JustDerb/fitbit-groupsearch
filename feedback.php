@@ -2,7 +2,7 @@
 require_once('includes/localhostStuff.php');
 require_once('api/feedbackGrabber.php');
 
-$G_TITLE = "Relliker - Fitbit Group Search";
+$G_TITLE = "Feedback - Relliker";
 $G_DESCRIPTION = "A group search tool for fitbit.";
 
 require_once ('includes/page_timer.php');

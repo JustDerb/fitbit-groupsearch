@@ -2,7 +2,7 @@
 require_once('includes/localhostStuff.php');
 require_once('api/search.php');
 
-$G_TITLE = "Relliker - Fitbit Group Search";
+$G_TITLE = "Search - Relliker";
 $G_DESCRIPTION = "A group search tool for fitbit.";
 
 require_once ('includes/page_timer.php');
@@ -23,6 +23,7 @@ else
 if (isset($_GET['s']))
 {
 	$searchTerms = $_GET['s'];
+	$G_TITLE = htmlentities($searchTerms)." - ".$G_TITLE;
 }
 else
 {

@@ -1,7 +1,7 @@
 <?php
 require_once('includes/localhostStuff.php');
 
-$G_TITLE = "Relliker - Fitbit Group Search";
+$G_TITLE = "About - Relliker";
 $G_DESCRIPTION = "A group search tool for fitbit.";
 
 require_once ('includes/page_timer.php');

@@ -2,7 +2,7 @@
 require_once('includes/localhostStuff.php');
 require_once('api/group.php');
 
-$G_TITLE = "Relliker - Fitbit Group Search";
+$G_TITLE = "Group Details - Relliker";
 $G_DESCRIPTION = "A group search tool for fitbit.";
 
 require_once ('includes/page_timer.php');
@@ -18,6 +18,7 @@ if (isset($_GET['g']))
 	$groupID = $_GET['g'];
 	try {
 		$groupObj = new FitbitGroup($groupID);
+		$G_TITLE = htmlentities($groupObj->getName())." - ".$G_TITLE;
 	} 
 	catch (NoGroupFound $ex) {
 	}
