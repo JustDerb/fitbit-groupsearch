@@ -96,7 +96,7 @@ function stripSpacesOut($text)
 	return $text;
 }
 	
-	//fitbit_login($username,$password);
+	fitbit_login($username,$password);
 	
 	$query =  "SELECT * FROM groupinfoqueue";
 	$result = mysql_query($query, $st_sql);
