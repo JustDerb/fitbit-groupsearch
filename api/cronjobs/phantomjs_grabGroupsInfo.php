@@ -76,17 +76,16 @@ function fitbit_getGroupsPageExtras($group)
 		echo 'ERROR: '.$json['error'];
 		exit(1);
 	}
-	$extras = [
-		'pagetitle' => $json['pagetitle'],
-		'title' => $json['title'],
-		'description' => $json['description'],
-		'members' => get_number($json['numMembers']),
-		'steps' => get_number($json['numSteps']),
-		'distance' => get_number($json['numMiles']),
-		'veryactive' => get_number($json['numVeryActiveMinutes']),
-		'activepoints' => "0", // Why u take this away fitbit!?
-		'daysremaining' => get_number($json['numDaysRemaining'])
-	];
+	$extras = array();
+	$extras['pagetitle'] = $json['pagetitle'];
+	$extras['title'] = $json['title'];
+	$extras['description'] = $json['description'];
+	$extras['members'] = get_number($json['numMembers']);
+	$extras['steps'] = get_number($json['numSteps']);
+	$extras['distance'] = get_number($json['numMiles']);
+	$extras['veryactive'] = get_number($json['numVeryActiveMinutes']);
+	$extras['activepoints'] = "0"; // Why u take this away fitbit!?
+	$extras['daysremaining'] = get_number($json['numDaysRemaining']);
 	return $extras;
 }
 
