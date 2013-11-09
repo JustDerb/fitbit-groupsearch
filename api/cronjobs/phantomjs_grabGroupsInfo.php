@@ -28,11 +28,17 @@ function exec_phantom($call)
 {
 	global $phantom_js,$cookie_js;
 	$toCall = $phantom_js." ".escapeshellarg("--ignore-ssl-errors=yes")." ".escapeshellarg("--cookies-file=".$cookie_js)." ".$call;
-	$toRet = shell_exec($toCall);
-	if ($toRet === NULL)
+	$output = array();
+	$retVal = 0;
+	exec($toCall, $output, $retVal);
+	if ($retVal != 0) 
+	{
 		exit(1);
+	} 
 	else
-		return $toRet;
+	{
+		return implode("\n", $output);
+	}
 }
 
 function fitbit_login($username, $password)
@@ -120,7 +126,7 @@ function stripSpacesOut($text)
 			$groupMetaQuery  = "INSERT INTO `groupsmetafitbit` ";
 			$groupMetaQuery .= "(`id`, `added`, `members`, `stat30steps`, `stat30activepoints`, `stat30distance`, `stat30veryactive`, `activity`) ";
 			$groupMetaQuery .= "VALUES ('".$row['groupid']."', ";
-			$groupMetaQuery .= "NOW(), '-1', ";
+			$groupMetaQuery .= "NOW(), '".$extras['members']."', ";
 			$groupMetaQuery .= "'".$extras['steps']."', '".$extras['activepoints']."', '".$extras['distance']."', '".$extras['veryactive']."', '0') ";
 			$infoResult2 = mysql_query($groupMetaQuery, $st_sql);
 			//===============================================
