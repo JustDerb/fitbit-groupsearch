@@ -22,7 +22,7 @@ else
 // Get search terms
 if (isset($_GET['s']))
 {
-	$searchTerms = $_GET['s'];
+	$searchTerms = trim($_GET['s']);
 	$G_TITLE = htmlentities($searchTerms)." - ".$G_TITLE;
 }
 else
@@ -88,7 +88,7 @@ require_once ('includes/analytics.php');
 					<form method="get">
 						<fieldset style="width: 100%">
 						<legend>Search</legend>
-						<input class="input-block-level" placeholder="Search terms..." type="text" name="s" value="<?php if (isset($_GET['s'])) {echo(htmlentities($_GET['s']));} ?>">
+						<input class="input-block-level" placeholder="Search terms..." type="text" name="s" value="<?php if (isset($searchTerms)) {echo(htmlentities($searchTerms));} ?>">
 						<?php
 /*						
 						<legend class="muted">Additional Options</legend>
@@ -159,12 +159,12 @@ ADSENSE;
 			</div>
 		</div>
 		<div class="span9">
-<?php if (isset($_GET['s'])): ?>
+<?php if (isset($searchTerms) && !empty($searchTerms)): ?>
 			<div class="alert alert-info">
 				<strong>Hey You!</strong> Did you know you can now sort your results? Try it by clicking one of the headers!
 				Try <a href="<?php echo("?s={$searchTerms}&p={$pageNum}&sort=membersD"); ?>">sorting by members</a> now!
 			</div>
-			<h4>Results for "<strong><?php echo(htmlentities($_GET['s'])); ?></strong>"
+			<h4>Results for "<strong><?php echo(htmlentities($searchTerms)); ?></strong>"
 			<?php
 				if ($clearSort)
 				{
@@ -266,11 +266,11 @@ SORTING;
 				<tbody>
 				<?php
 					// Lets search!
-					//if (@$_GET['s'])
+					//if (@$searchTerms)
 					//{							
 						// Protect ourselves
-						$_GET['s'] = stripslashes($_GET['s']);
-						$search = st_mysql_encode($_GET['s'],$st_sql);
+						$searchTerms = stripslashes($searchTerms);
+						$search = st_mysql_encode($searchTerms,$st_sql);
 						
 						// Search
 						$searchAPI = new fitbitSearch();
@@ -353,11 +353,11 @@ FOOTER;
 						$prevPage = "";
 						$nextPage = "";
 						if ($pageNum != 0) 
-							$prevPage .= '<li class="previous"><a href="?s='.$_GET['s'].'&p='.($pageNum-1).'">&larr; Previous</a></li>';
+							$prevPage .= '<li class="previous"><a href="?s='.$searchTerms.'&p='.($pageNum-1).'">&larr; Previous</a></li>';
 						else
 							$prevPage .= '<li class="previous disabled"><a href="#">&larr; Previous</a></li>';
 						if (($startGroup+count($searchResults)) < $searchAPI->getTotal())
-							$nextPage .= '<li class="next"><a href="?s='.$_GET['s'].'&p='.($pageNum+1).'">Next &rarr;</a></li>';
+							$nextPage .= '<li class="next"><a href="?s='.$searchTerms.'&p='.($pageNum+1).'">Next &rarr;</a></li>';
 						else
 							$nextPage .= '<li class="next disabled"><a href="#">Next &rarr;</a></li>';
 						echo('<tr><td colspan="6"><ul class="pager">'.$prevPage.$nextPage.'</ul></td></tr>');
