@@ -20,6 +20,12 @@ function search_keywordMatch($search, $sorting = "")
 	$punctuation = array(",", "!", ".");
 	$search = str_replace($punctuation, "", $search);
 	
+	//Trim whitespace at beginning and end
+	$search = trim($search);
+
+	// Only a single space between arguments
+	$search = preg_replace('/\s+/', ' ',$search);
+
 	//Keyword by spaces
 	$searches = explode(" ", $search);
 	
