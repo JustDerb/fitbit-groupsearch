@@ -33,13 +33,13 @@ def lambda_handler(event, context):
     search_term = query['s']
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('term')
+    # parser.add_argument('term', default='')
     parser.add_argument('--es_host')
     parser.add_argument('--local', action='store_true')
     args = parser.parse_args()
     if args.local:
         args.es_host = 'localhost'
-        search_term = args.term
+        # search_term = args.term
     else:
         args.es_host = ensure_variable(args.es_host, 'ES_HOST')
 
@@ -64,7 +64,8 @@ def lambda_handler(event, context):
     print('[ELASTICSEARCH] Connected!')
 
     print('[SEARCH] {}'.format(search_term))
-    results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term)
+    # results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term)
+    results = {}
 
     response = {
         "statusCode": 200,
