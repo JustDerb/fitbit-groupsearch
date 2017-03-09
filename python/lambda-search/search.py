@@ -35,7 +35,7 @@ def lambda_handler(event, context):
     parser = argparse.ArgumentParser()
     parser.add_argument('term')
     parser.add_argument('--es_host')
-    parser.add_argument('--local', action='store_false')
+    parser.add_argument('--local', action='store_true')
     args = parser.parse_args()
     if args.local:
         args.es_host = 'localhost'
