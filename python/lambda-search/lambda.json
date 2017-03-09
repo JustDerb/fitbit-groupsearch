@@ -1,0 +1,9 @@
+{
+  "name": "relliker-search",
+  "description": "function to search FitBit groups",
+  "region": "us-west-2",
+  "handler": "search.lambda_handler",
+  "role": "arn:aws:iam::629523249783:role/service-role/relliker_lambda",
+  "timeout": 5,
+  "memory": 128
+}

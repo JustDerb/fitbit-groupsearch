@@ -1,3 +1,12 @@
 .idea
 dist
 *.egg-info
+
+# virtualenv stuff
+python/lambda-*/bin/
+python/lambda-*/include/
+python/lambda-*/lib/
+python/lambda-*/local/
+
+# lambda-uploader stuff
+python/*.zip
