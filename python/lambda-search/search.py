@@ -35,13 +35,16 @@ def lambda_handler(event, context):
     parser = argparse.ArgumentParser()
     # parser.add_argument('term', default='')
     parser.add_argument('--es_host')
+    parser.add_argument('--es_port')
     parser.add_argument('--local', action='store_true')
     args = parser.parse_args()
     if args.local:
         args.es_host = 'localhost'
+        args.es_port = 9200
         # search_term = args.term
     else:
         args.es_host = ensure_variable(args.es_host, 'ES_HOST')
+        args.es_port = ensure_variable(args.es_port, 'ES_PORT')
 
     print('[ELASTICSEARCH] Connecting to {}...'.format(args.es_host))
     if not args.local:
@@ -51,7 +54,7 @@ def lambda_handler(event, context):
         aws_auth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es', session_token=credentials.token)
 
         elastic_search_api = Elasticsearch(
-            hosts=[{"host": args.es_host, "port": 9200}],
+            hosts=[{"host": args.es_host, "port": int(args.es_port)}],
             http_auth=aws_auth,
             use_ssl=True,
             verify_certs=True,
@@ -59,13 +62,13 @@ def lambda_handler(event, context):
         )
     else:
         elastic_search_api = Elasticsearch(
-            hosts=[{"host": args.es_host, "port": 9200}]
+            hosts=[{"host": args.es_host, "port": int(args.es_port)}]
         )
     print('[ELASTICSEARCH] Connected!')
 
     print('[SEARCH] {}'.format(search_term))
-    # results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term)
-    results = {}
+    results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term)
+    # results = {}
 
     response = {
         "statusCode": 200,
