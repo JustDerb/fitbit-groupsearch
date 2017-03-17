@@ -75,6 +75,7 @@ def main():
     parser.add_argument('--db_name')
     parser.add_argument('--db_user')
     parser.add_argument('--db_password')
+    parser.add_argument('--es_host')
     ARGS = parser.parse_args()
     ARGS.email = ensure_variable(ARGS.email, 'FITBIT_EMAIL')
     ARGS.password = ensure_variable(ARGS.password, 'FITBIT_PASSWORD')
@@ -82,6 +83,7 @@ def main():
     ARGS.db_name = ensure_variable(ARGS.db_name, 'DB_NAME')
     ARGS.db_user = ensure_variable(ARGS.db_user, 'DB_USER')
     ARGS.db_password = ensure_variable(ARGS.db_password, 'DB_PASSWORD')
+    ARGS.es_host = ensure_variable(ARGS.es_host, 'ES_HOST')
 
     START_TIME = time.time()
     GLOBAL_COOKIE_JAR = cookielib.CookieJar()
@@ -94,10 +96,8 @@ def main():
     POSTGRES_CURSOR = POSTGRES.cursor()
     print '[POSTGRESQL] Connected!'
 
-    ES_HOST = 'localhost'
-    print '[ELASTICSEARCH] Connecting to {}...'.format(ES_HOST)
-    ELASTIC_SEARCH = Elasticsearch(hosts=[{"host": ES_HOST, "port": 9200}])
-    # ELASTIC_SEARCH = Elasticsearch()
+    print '[ELASTICSEARCH] Connecting to {}...'.format(ARGS.es_host)
+    ELASTIC_SEARCH = Elasticsearch(hosts=[{"host": ARGS.es_host, "port": 9200}])
     print '[ELASTICSEARCH] Connected!'
 
     login(ARGS.email, ARGS.password, GLOBAL_COOKIE_JAR)
@@ -108,19 +108,28 @@ def main():
     # Skip a-z (lowercase)
     for i in range(ord('{'), ord('~') + 1):
         letters.append(chr(i))
+
+    # Rotate our list so we start with the letter that is in the db
+    POSTGRES_CURSOR.execute(u'''SELECT value FROM settings WHERE key = %s;''', ('starting_letter',))
+    starting_letter = POSTGRES_CURSOR.fetchone()[0]
+    starting_letter_index = letters.index(starting_letter)
+    # Start on the next index/letter
+    starting_letter_index = (starting_letter_index + 1) % len(letters)
+    letters = letters[starting_letter_index:] + letters[:starting_letter_index]
+
     print 'Letter prefixes to fetch:'
     print letters
 
     NUM_PER_PAGE = 100
-
     for letter in letters:
         letter_start_time = time.time()
         page = 1
         startIndex = 0
+        print '[{}] [....] Starting analysis'.format(letter)
         while True:
             response = get_group(GLOBAL_COOKIE_JAR, letter, startIndex, NUM_PER_PAGE)
             # print response
-            parser = GroupResponseParser()
+            parser = GroupResponseParser.GroupResponseParser()
             parser.feed(response)
             groups = parser.groups
 
@@ -150,12 +159,16 @@ def main():
 
             startIndex += len(groups)
             print '[{}] [....] Analyzed {} groups ({} total)'.format(letter, len(groups), startIndex)
-            # if len(groups) < 20:
-            #     break
-            break
+            if len(groups) < 20:
+                POSTGRES_CURSOR.execute(u'''UPDATE settings SET value = %s WHERE key = %s;''',
+                                        (letter, 'starting_letter'))
+                POSTGRES.commit()
+                break
 
         print '[{}] [DONE] Analyzed {} groups in {} seconds'.format(letter, startIndex, time.time() - letter_start_time)
-        break
 
     END_TIME = time.time()
     print(END_TIME - START_TIME)
+
+if __name__ == '__main__':
+    main()
