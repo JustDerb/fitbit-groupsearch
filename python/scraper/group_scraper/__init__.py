@@ -5,11 +5,19 @@ import psycopg2
 import time
 import urllib
 import urllib2
+import boto3
 from datetime import datetime
 
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, RequestsHttpConnection
+from requests_aws4auth import AWS4Auth
 
 from . import GroupResponseParser
+
+# Hack: http://stackoverflow.com/a/17628350
+import sys
+if sys.getdefaultencoding() == 'ascii':
+    reload(sys)
+    sys.setdefaultencoding('UTF8')
 
 
 def ensure_variable(actual, env_name):
@@ -76,6 +84,8 @@ def main():
     parser.add_argument('--db_user')
     parser.add_argument('--db_password')
     parser.add_argument('--es_host')
+    parser.add_argument('--es_port')
+    parser.add_argument('--local', action='store_true')
     ARGS = parser.parse_args()
     ARGS.email = ensure_variable(ARGS.email, 'FITBIT_EMAIL')
     ARGS.password = ensure_variable(ARGS.password, 'FITBIT_PASSWORD')
@@ -83,7 +93,12 @@ def main():
     ARGS.db_name = ensure_variable(ARGS.db_name, 'DB_NAME')
     ARGS.db_user = ensure_variable(ARGS.db_user, 'DB_USER')
     ARGS.db_password = ensure_variable(ARGS.db_password, 'DB_PASSWORD')
-    ARGS.es_host = ensure_variable(ARGS.es_host, 'ES_HOST')
+    if ARGS.local:
+        ARGS.es_host = 'localhost'
+        ARGS.es_port = 9200
+    else:
+        ARGS.es_host = ensure_variable(ARGS.es_host, 'ES_HOST')
+        ARGS.es_port = ensure_variable(ARGS.es_port, 'ES_PORT')
 
     START_TIME = time.time()
     GLOBAL_COOKIE_JAR = cookielib.CookieJar()
@@ -97,7 +112,21 @@ def main():
     print '[POSTGRESQL] Connected!'
 
     print '[ELASTICSEARCH] Connecting to {}...'.format(ARGS.es_host)
-    ELASTIC_SEARCH = Elasticsearch(hosts=[{"host": ARGS.es_host, "port": 9200}])
+    if ARGS.local:
+        ELASTIC_SEARCH = Elasticsearch(hosts=[{"host": ARGS.es_host, "port": int(ARGS.es_port)}])
+    else:
+        session = boto3.Session()
+        credentials = session.get_credentials()
+        region = os.environ['AWS_REGION']
+        aws_auth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es',
+                            session_token=credentials.token)
+        ELASTIC_SEARCH = Elasticsearch(
+            hosts=[{"host": ARGS.es_host, "port": int(ARGS.es_port)}],
+            http_auth=aws_auth,
+            use_ssl=True,
+            verify_certs=True,
+            connection_class=RequestsHttpConnection
+        )
     print '[ELASTICSEARCH] Connected!'
 
     login(ARGS.email, ARGS.password, GLOBAL_COOKIE_JAR)
@@ -151,15 +180,16 @@ def main():
                                               VALUES (nextval('group_info_sequence'), %s, now(), %s);''',
                                         (group.groupId, group.groupMembers))
                 POSTGRES.commit()
-                response = ELASTIC_SEARCH.index(index='group-index', doc_type='group_info', id=group.groupId, body={
-                    'name': group.groupName,
-                    'description': group.groupDescription,
-                    'timestamp': datetime.now(),
-                })
+                body = {
+                    'name': unicode(group.groupName, 'utf-8'),
+                    'description': unicode(group.groupDescription, 'utf-8'),
+                    'timestamp': unicode(datetime.utcnow().isoformat(), 'utf-8'),
+                }
+                ELASTIC_SEARCH.index(index='group-index', doc_type='group_info', id=group.groupId, body=body)
 
             startIndex += len(groups)
             print '[{}] [....] Analyzed {} groups ({} total)'.format(letter, len(groups), startIndex)
-            if len(groups) < 20:
+            if len(groups) < NUM_PER_PAGE:
                 POSTGRES_CURSOR.execute(u'''UPDATE settings SET value = %s WHERE key = %s;''',
                                         (letter, 'starting_letter'))
                 POSTGRES.commit()
