@@ -102,16 +102,16 @@ def main():
 
     START_TIME = time.time()
     GLOBAL_COOKIE_JAR = cookielib.CookieJar()
-    print '[POSTGRESQL] Connecting to {} [User: {}, Name: {}]...'.format(ARGS.db_host, ARGS.db_user, ARGS.db_name)
+    print('[POSTGRESQL] Connecting to {} [User: {}, Name: {}]...'.format(ARGS.db_host, ARGS.db_user, ARGS.db_name))
     POSTGRES = psycopg2.connect(
         host=ARGS.db_host,
         user=ARGS.db_user,
         database=ARGS.db_name,
         password=ARGS.db_password)
     POSTGRES_CURSOR = POSTGRES.cursor()
-    print '[POSTGRESQL] Connected!'
+    print('[POSTGRESQL] Connected!')
 
-    print '[ELASTICSEARCH] Connecting to {}...'.format(ARGS.es_host)
+    print('[ELASTICSEARCH] Connecting to {}...'.format(ARGS.es_host))
     if ARGS.local:
         ELASTIC_SEARCH = Elasticsearch(hosts=[{"host": ARGS.es_host, "port": int(ARGS.es_port)}])
     else:
@@ -127,7 +127,7 @@ def main():
             verify_certs=True,
             connection_class=RequestsHttpConnection
         )
-    print '[ELASTICSEARCH] Connected!'
+    print('[ELASTICSEARCH] Connected!')
 
     login(ARGS.email, ARGS.password, GLOBAL_COOKIE_JAR)
     # http://www.asciitable.com/
@@ -146,15 +146,15 @@ def main():
     starting_letter_index = (starting_letter_index + 1) % len(letters)
     letters = letters[starting_letter_index:] + letters[:starting_letter_index]
 
-    print 'Letter prefixes to fetch:'
-    print letters
+    print('Letter prefixes to fetch:')
+    print(letters)
 
     NUM_PER_PAGE = 100
     for letter in letters:
         letter_start_time = time.time()
         page = 1
         startIndex = 0
-        print '[{}] [....] Starting analysis'.format(letter)
+        print( '[{}] [....] Starting analysis'.format(letter))
         while True:
             response = get_group(GLOBAL_COOKIE_JAR, letter, startIndex, NUM_PER_PAGE)
             # print response
@@ -181,21 +181,23 @@ def main():
                                         (group.groupId, group.groupMembers))
                 POSTGRES.commit()
                 body = {
+                    'id': unicode(group.groupId, 'UTF-8'),
                     'name': unicode(group.groupName, 'utf-8'),
                     'description': unicode(group.groupDescription, 'utf-8'),
+                    'members': group.groupMembers,
                     'timestamp': unicode(datetime.utcnow().isoformat(), 'utf-8'),
                 }
                 ELASTIC_SEARCH.index(index='group-index', doc_type='group_info', id=group.groupId, body=body)
 
             startIndex += len(groups)
-            print '[{}] [....] Analyzed {} groups ({} total)'.format(letter, len(groups), startIndex)
+            print('[{}] [....] Analyzed {} groups ({} total)'.format(letter, len(groups), startIndex))
             if len(groups) < NUM_PER_PAGE:
                 POSTGRES_CURSOR.execute(u'''UPDATE settings SET value = %s WHERE key = %s;''',
                                         (letter, 'starting_letter'))
                 POSTGRES.commit()
                 break
 
-        print '[{}] [DONE] Analyzed {} groups in {} seconds'.format(letter, startIndex, time.time() - letter_start_time)
+        print('[{}] [DONE] Analyzed {} groups in {} seconds'.format(letter, startIndex, time.time() - letter_start_time))
 
     END_TIME = time.time()
     print(END_TIME - START_TIME)

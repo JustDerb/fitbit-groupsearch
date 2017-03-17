@@ -2,26 +2,34 @@
 
 $(function() {
 
+var API_ENDPOINT = 'https://bn5co2yv54.execute-api.us-west-2.amazonaws.com/Prod';
+
 function populateResults(searchTerm, results) {
   console.log(results);
   let groupResults = $('#group-results');
-  let resultsLength = results.length;
+  let searchResults = results.result.hits.hits;
+  let resultsLength = results.result.hits.total;
+  let timeMillis = results.result.took;
   $('#search-terms').text(searchTerm);
   $('#search-results-count').text(resultsLength + ' result' + (resultsLength != 1 ? 's' : ''));
+  $('#search-results-time').text(timeMillis + ' millisecond' + (timeMillis != 1 ? 's' : ''));
   groupResults.empty();
-  for (let i = 0; i < resultsLength; i++) {
-    let result = results[i];
+  for (let i = 0; i < searchResults.length; i++) {
+    let result = searchResults[i];
     let groupMain = $('<a/>', {
       'class': 'list-group-item',
-      'href': 'https://fitbit.com/group/' + result.id + '?utm_source=relliker&utm_medium=referral&utm_term=' + encodeURIComponent(searchTerm),
+      'href': 'https://fitbit.com/group/' + result._id + '?utm_source=relliker&utm_medium=referral&utm_term=' + encodeURIComponent(searchTerm),
       'target': '_blank'
     });
+    let resultsSource = result._source;
     let groupMembers = $('<span/>', { 'class': 'badge' });
-    groupMembers.text(result.members + ' member' + (result.members != 1 ? 's' : ''));
+    if (resultsSource.members !== undefined) {
+      groupMembers.text(resultsSource.members + ' member' + (resultsSource.members != 1 ? 's' : ''));
+    }
     let groupHeading = $('<h4/>', { 'class': 'list-group-item-heading' });
-    groupHeading.text(result.name);
+    groupHeading.text(resultsSource.name);
     let groupDescription = $('<p/>', { 'class': 'list-group-item-text' });
-    groupDescription.text(result.description);
+    groupDescription.text(resultsSource.description);
     groupMain.append(groupMembers);
     groupMain.append(groupHeading);
     groupMain.append(groupDescription);
@@ -33,12 +41,12 @@ function populateResults(searchTerm, results) {
 }
 
 function getSearchResults(searchTerm) {
-  populateResults(searchTerm, [{
-    name: 'Test name',
-    description: 'Test description',
-    members: 3,
-    id: 'IDGAF'
-  }]);
+  $.get(API_ENDPOINT + '/search', {
+    s: searchTerm,
+    o: 0
+  }, function (result) {
+    populateResults(searchTerm, result);
+  }, 'json');
 }
 
 function searchGroups() {

@@ -30,6 +30,21 @@ def lambda_handler(event, context):
             })
         }
 
+    if 'o' not in query:
+        offset = 0
+    else:
+        try:
+            offset = int(query['o'])
+        except ValueError:
+            return {
+                "statusCode": 400,
+                "headers": {},
+                "body": json.dumps({
+                    "errorMessage": "Invalid 'o' query param - must be an integer",
+                    "result": {}
+                })
+            }
+
     search_term = query['s']
 
     parser = argparse.ArgumentParser()
@@ -67,15 +82,20 @@ def lambda_handler(event, context):
     print('[ELASTICSEARCH] Connected!')
 
     print('[SEARCH] {}'.format(search_term))
-    results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term)
-    # results = {}
+    results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term,
+                                        size=50, from_=offset)
 
+    next_offset = min(len(results['hits']['hits']) + offset + 1, results['hits']['total'])
     response = {
         "statusCode": 200,
-        "headers": {},
+        "headers": {
+            # FIXME: remove after testing
+            "Access-Control-Allow-Origin": "*",
+        },
         "body": json.dumps({
             "errorMessage": None,
-            "result": results
+            "result": results,
+            "next_offset": next_offset,
         })
     }
 
