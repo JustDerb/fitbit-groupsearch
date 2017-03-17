@@ -13,4 +13,4 @@ pip install group_scraper-1.0.0.tar.gz
 python -m group_scraper
 popd
 
-shutdown now
+sudo shutdown -h now
