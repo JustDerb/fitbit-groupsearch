@@ -10,7 +10,7 @@ aws s3 cp s3://relliker.com/scraper/relliker-settings.source relliker-settings.s
 source relliker-settings.source
 aws s3 cp s3://relliker.com/scraper/group_scraper-1.0.0.tar.gz group_scraper-1.0.0.tar.gz
 pip install group_scraper-1.0.0.tar.gz
-python -m group_scraper
+python -m group_scraper || true
 popd
 
 sudo shutdown -h now
