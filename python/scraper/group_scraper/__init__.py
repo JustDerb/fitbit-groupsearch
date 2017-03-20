@@ -201,6 +201,7 @@ def main():
                 break
 
         print('[{}] [DONE] Analyzed {} groups in {} seconds'.format(letter, startIndex, time.time() - letter_start_time))
+        sys.stdout.flush()
 
     END_TIME = time.time()
     print(END_TIME - START_TIME)
