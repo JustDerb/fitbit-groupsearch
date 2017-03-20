@@ -193,6 +193,7 @@ def main():
 
             startIndex += len(groups)
             print('[{}] [....] Analyzed {} groups ({} total)'.format(letter, len(groups), startIndex))
+            sys.stdout.flush()
             if len(groups) < NUM_PER_PAGE:
                 POSTGRES_CURSOR.execute(u'''UPDATE settings SET value = %s WHERE key = %s;''',
                                         (letter, 'starting_letter'))
