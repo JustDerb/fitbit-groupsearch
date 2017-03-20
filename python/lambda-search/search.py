@@ -8,6 +8,47 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
 
+# https://www.elastic.co/guide/en/elasticsearch/reference/2.3/query-dsl-query-string-query.html#_reserved_characters
+def needs_escaping(character):
+    escape_chars = {
+        '+': True,
+        '-': True,
+        '=': True,
+        '&': True,
+        '&': True,
+        '|': True,
+        '|': True,
+        '>': True,
+        '<': True,
+        '!': True,
+        '(': True,
+        ')': True,
+        '{': True,
+        '}': True,
+        '[': True,
+        ']': True,
+        '^': True,
+        '"': True,
+        '~': True,
+        '*': True,
+        '?': True,
+        ':': True,
+        '\\': True,
+        '/': True,
+    }
+    return escape_chars.get(character, False)
+
+
+def sanitize_search(term):
+    sanitized = ''
+    for character in term:
+        if needs_escaping(character):
+            sanitized += '\\{}'.format(character)
+        else:
+            sanitized += character
+    return sanitized
+
+
 def ensure_variable(actual, env_name):
     if actual:
         return actual
@@ -81,6 +122,7 @@ def lambda_handler(event, context):
         )
     print('[ELASTICSEARCH] Connected!')
 
+    search_term = sanitize_search(search_term)
     print('[SEARCH] {}'.format(search_term))
     results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term,
                                         size=50, from_=offset)
