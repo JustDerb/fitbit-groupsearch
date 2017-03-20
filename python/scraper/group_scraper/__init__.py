@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*
+
 import argparse
 import cookielib
 import os
@@ -181,11 +183,11 @@ def main():
                                         (group.groupId, group.groupMembers))
                 POSTGRES.commit()
                 body = {
-                    'id': unicode(group.groupId, 'UTF-8'),
-                    'name': unicode(group.groupName, 'utf-8'),
-                    'description': unicode(group.groupDescription, 'utf-8'),
+                    'id': group.groupId,
+                    'name': group.groupName,
+                    'description': group.groupDescription,
                     'members': group.groupMembers,
-                    'timestamp': unicode(datetime.utcnow().isoformat(), 'utf-8'),
+                    'timestamp': u'{}'.format(datetime.utcnow().isoformat()),
                 }
                 ELASTIC_SEARCH.index(index='group-index', doc_type='group_info', id=group.groupId, body=body)
 

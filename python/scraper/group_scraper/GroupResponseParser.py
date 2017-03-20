@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*
+
 import enum
 import HTMLParser
 import re
+from htmlentitydefs import name2codepoint
 
 from GroupInfo import GroupInfo
 
@@ -50,7 +53,7 @@ class GroupResponseParser(HTMLParser.HTMLParser, object):
                 self.state = TagState.INSIDE_GROUP_INFO_LINK
                 match = GROUP_ID_REGEX.search(self._get_html_attr('href', attrs))
                 if match.group(1):
-                    self.currentGroup.groupId = match.group(1)
+                    self.currentGroup.groupId = u'{}'.format(match.group(1))
                 else:
                     raise BaseException('Couldn\'t find GROUP_ID_REGEX in {}'.format(data))
         elif tag == 'span':
@@ -85,26 +88,39 @@ class GroupResponseParser(HTMLParser.HTMLParser, object):
             self.state = TagState.INSIDE_GROUP_INFO
 
     def handle_data(self, data):
-        data = data.strip()
-        if not data:
-            return
         # print "Encountered data: {}".format(data)
         if self.state == TagState.INSIDE_GROUP_INFO_LINK:
-            self.currentGroup.groupName = self._sanitize(data)
+            self.currentGroup.groupName += u'{}'.format(self._sanitize(data))
         elif self.state == TagState.INSIDE_GROUP_INFO_DESCRIPTION:
-            self.currentGroup.groupDescription = self._sanitize(data)
+            self.currentGroup.groupDescription += u'{}'.format(self._sanitize(data))
         elif self.state == TagState.INSIDE_GROUP_COUNT:
             match = MEMBERS_COUNT_REGEX.search(data)
             if match.group(1):
-                self.currentGroup.groupMembers = match.group(1)
+                self.currentGroup.groupMembers = u'{}'.format(match.group(1))
             else:
                 raise BaseException('Couldn\'t find MEMBERS_COUNT_REGEX in {}'.format(data))
+
+    def handle_entityref(self, name):
+        if self.state == TagState.INSIDE_GROUP_INFO_LINK:
+            if name in name2codepoint:
+                self.currentGroup.groupName += unichr(name2codepoint[name])
+            else:
+                # Unknown HTML entity (because FitBit doesn't escape ampersands?),
+                # so put it back in the title as-is
+                self.currentGroup.groupName += u'&{}'.format(name)
+        elif self.state == TagState.INSIDE_GROUP_INFO_DESCRIPTION:
+            if name in name2codepoint:
+                self.currentGroup.groupDescription += unichr(name2codepoint[name])
+            else:
+                # Unknown HTML entity (because FitBit doesn't escape ampersands?),
+                # so put it back in the description as-is
+                self.currentGroup.groupDescription += u'&{}'.format(name)
 
     @staticmethod
     def _get_html_attr(key, attrs):
         for attr in attrs:
             if attr[0] == key:
-                return attr[1];
+                return attr[1]
         return ''
 
     @staticmethod

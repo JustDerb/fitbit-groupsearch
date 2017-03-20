@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*
+
 class GroupInfo:
     def __init__(self):
         self.groupId = ''
