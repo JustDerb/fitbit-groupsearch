@@ -3,7 +3,7 @@
 import argparse
 import cookielib
 import os
-import psycopg2
+# import psycopg2
 import time
 import urllib
 import urllib2
@@ -81,20 +81,20 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-e', '--email', help='Email to use when logging in')
     parser.add_argument('-p', '--password', help='Password to use when logging in')
-    parser.add_argument('--db_host')
-    parser.add_argument('--db_name')
-    parser.add_argument('--db_user')
-    parser.add_argument('--db_password')
+    # parser.add_argument('--db_host')
+    # parser.add_argument('--db_name')
+    # parser.add_argument('--db_user')
+    # parser.add_argument('--db_password')
     parser.add_argument('--es_host')
     parser.add_argument('--es_port')
     parser.add_argument('--local', action='store_true')
     ARGS = parser.parse_args()
     ARGS.email = ensure_variable(ARGS.email, 'FITBIT_EMAIL')
     ARGS.password = ensure_variable(ARGS.password, 'FITBIT_PASSWORD')
-    ARGS.db_host = ensure_variable(ARGS.db_host, 'DB_HOST')
-    ARGS.db_name = ensure_variable(ARGS.db_name, 'DB_NAME')
-    ARGS.db_user = ensure_variable(ARGS.db_user, 'DB_USER')
-    ARGS.db_password = ensure_variable(ARGS.db_password, 'DB_PASSWORD')
+    # ARGS.db_host = ensure_variable(ARGS.db_host, 'DB_HOST')
+    # ARGS.db_name = ensure_variable(ARGS.db_name, 'DB_NAME')
+    # ARGS.db_user = ensure_variable(ARGS.db_user, 'DB_USER')
+    # ARGS.db_password = ensure_variable(ARGS.db_password, 'DB_PASSWORD')
     if ARGS.local:
         ARGS.es_host = 'localhost'
         ARGS.es_port = 9200
@@ -104,14 +104,14 @@ def main():
 
     START_TIME = time.time()
     GLOBAL_COOKIE_JAR = cookielib.CookieJar()
-    print('[POSTGRESQL] Connecting to {} [User: {}, Name: {}]...'.format(ARGS.db_host, ARGS.db_user, ARGS.db_name))
-    POSTGRES = psycopg2.connect(
-        host=ARGS.db_host,
-        user=ARGS.db_user,
-        database=ARGS.db_name,
-        password=ARGS.db_password)
-    POSTGRES_CURSOR = POSTGRES.cursor()
-    print('[POSTGRESQL] Connected!')
+    # print('[POSTGRESQL] Connecting to {} [User: {}, Name: {}]...'.format(ARGS.db_host, ARGS.db_user, ARGS.db_name))
+    # POSTGRES = psycopg2.connect(
+    #     host=ARGS.db_host,
+    #     user=ARGS.db_user,
+    #     database=ARGS.db_name,
+    #     password=ARGS.db_password)
+    # POSTGRES_CURSOR = POSTGRES.cursor()
+    # print('[POSTGRESQL] Connected!')
 
     print('[ELASTICSEARCH] Connecting to {}...'.format(ARGS.es_host))
     if ARGS.local:
@@ -141,8 +141,9 @@ def main():
         letters.append(chr(i))
 
     # Rotate our list so we start with the letter that is in the db
-    POSTGRES_CURSOR.execute(u'''SELECT value FROM settings WHERE key = %s;''', ('starting_letter',))
-    starting_letter = POSTGRES_CURSOR.fetchone()[0]
+    # POSTGRES_CURSOR.execute(u'''SELECT value FROM settings WHERE key = %s;''', ('starting_letter',))
+    # starting_letter = POSTGRES_CURSOR.fetchone()[0]
+    starting_letter = 'A'
     starting_letter_index = letters.index(starting_letter)
     # Start on the next index/letter
     starting_letter_index = (starting_letter_index + 1) % len(letters)
@@ -165,23 +166,23 @@ def main():
             groups = parser.groups
 
             for group in groups:
-                try:
-                    POSTGRES_CURSOR.execute(u'''UPDATE groups SET
-                                                  (name, description, last_updated) = (%s, %s, now())
-                                                  WHERE id = %s;''',
-                                            (group.groupName, group.groupDescription, group.groupId))
-                    if POSTGRES_CURSOR.rowcount != 1:
-                        POSTGRES_CURSOR.execute(u'''INSERT INTO groups(id, name, description, last_updated)
-                                                      VALUES (%s, %s, %s, now());''',
-                                                (group.groupId, group.groupName, group.groupDescription))
-                    POSTGRES.commit()
-                except psycopg2.IntegrityError:
-                    POSTGRES.rollback()
-
-                POSTGRES_CURSOR.execute(u'''INSERT INTO group_info(id, group_id, created, members)
-                                              VALUES (nextval('group_info_sequence'), %s, now(), %s);''',
-                                        (group.groupId, group.groupMembers))
-                POSTGRES.commit()
+                # try:
+                #     POSTGRES_CURSOR.execute(u'''UPDATE groups SET
+                #                                   (name, description, last_updated) = (%s, %s, now())
+                #                                   WHERE id = %s;''',
+                #                             (group.groupName, group.groupDescription, group.groupId))
+                #     if POSTGRES_CURSOR.rowcount != 1:
+                #         POSTGRES_CURSOR.execute(u'''INSERT INTO groups(id, name, description, last_updated)
+                #                                       VALUES (%s, %s, %s, now());''',
+                #                                 (group.groupId, group.groupName, group.groupDescription))
+                #     POSTGRES.commit()
+                # except psycopg2.IntegrityError:
+                #     POSTGRES.rollback()
+                #
+                # POSTGRES_CURSOR.execute(u'''INSERT INTO group_info(id, group_id, created, members)
+                #                               VALUES (nextval('group_info_sequence'), %s, now(), %s);''',
+                #                         (group.groupId, group.groupMembers))
+                # POSTGRES.commit()
                 body = {
                     'id': group.groupId,
                     'name': group.groupName,
@@ -195,9 +196,9 @@ def main():
             print('[{}] [....] Analyzed {} groups ({} total)'.format(letter, len(groups), startIndex))
             sys.stdout.flush()
             if len(groups) < NUM_PER_PAGE:
-                POSTGRES_CURSOR.execute(u'''UPDATE settings SET value = %s WHERE key = %s;''',
-                                        (letter, 'starting_letter'))
-                POSTGRES.commit()
+                # POSTGRES_CURSOR.execute(u'''UPDATE settings SET value = %s WHERE key = %s;''',
+                #                         (letter, 'starting_letter'))
+                # POSTGRES.commit()
                 break
 
         print('[{}] [DONE] Analyzed {} groups in {} seconds'.format(letter, startIndex, time.time() - letter_start_time))
