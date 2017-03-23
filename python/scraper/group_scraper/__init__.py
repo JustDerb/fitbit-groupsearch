@@ -145,8 +145,8 @@ def main():
     # starting_letter = POSTGRES_CURSOR.fetchone()[0]
     starting_letter = 'A'
     starting_letter_index = letters.index(starting_letter)
-    # Start on the next index/letter
-    starting_letter_index = (starting_letter_index + 1) % len(letters)
+    # # Start on the next index/letter
+    # starting_letter_index = (starting_letter_index + 1) % len(letters)
     letters = letters[starting_letter_index:] + letters[:starting_letter_index]
 
     print('Letter prefixes to fetch:')
