@@ -101,6 +101,7 @@ function getSearchResults(searchTerm, scrollAfterResults, offset) {
       }
     },
     error: function () {
+      $('#row-search-loading').hide();
       $('#row-search-trottled').show();
     },
     datatype: 'json'
