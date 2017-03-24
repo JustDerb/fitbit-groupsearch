@@ -3,3 +3,18 @@ body {
   padding-top: 50px;
   padding-bottom: 20px;
 }
+
+a.anchor {
+  display: block;
+  position: relative;
+  top: -50px;
+  visibility: hidden;
+}
+
+.search-heading {
+  word-wrap: break-word;
+}
+
+.search-description {
+  word-wrap: break-word;
+}

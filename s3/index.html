@@ -37,12 +37,15 @@
           <a class="navbar-brand" href="/">relliker</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <div class="navbar-form navbar-right">
+          <div class="navbar-form navbar-right" onSubmit="return searchGroupsForm(this)">
             <div class="form-group">
-              <input id="form-search-topbar-text" type="text" placeholder="Search" class="form-control">
+              <input id="form-search-topbar-text" type="text"
+                     placeholder="Search" name="s" class="form-control search-box">
             </div>
-            <button id="form-search-topbar-button" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Search</button>
-          </div>
+            <button id="form-search-topbar-button" type="submit" class="btn btn-primary">
+              <span class="glyphicon glyphicon-search"></span> Search
+            </button>
+          </form>
         </div>
       </div>
     </nav>
@@ -53,38 +56,79 @@
         <p>You are probably here because FitBit only lists their groups alphabetically, right? Well, this is a search engine that does one better! Search for groups by title and also by descriptions. Try to search broad keywords, and clarify your search by entering your city or any other information you might think of. <i>Welcome to the new way to search FitBit groups.</i></p>
         <div class="row">
           <div class="col-md-offset-4 col-md-4">
-            <div>
+            <form onSubmit="return searchGroupsForm(this)">
               <div class="form-group">
-                <input id="form-search-jumbotron-text" type="text" placeholder="Search" class="form-control">
+                <input id="form-search-jumbotron-text" type="text"
+                       placeholder="Search" name="s" class="form-control search-box">
               </div>
-              <button id="form-search-jumbotron-button" type="button" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-search"></span> Start Searching Now</button>
-            </div>
+              <button id="form-search-jumbotron-button" type="submit" class="btn btn-primary btn-block">
+                <span class="glyphicon glyphicon-search"></span> Start Searching Now
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </div>
+    
+    <noscript>
+      <div class="alert alert-danger" role="alert">
+        <strong>Uh-Oh!</strong> This site requires javascript to function correctly!
+        Here are the <a href="http://www.enable-javascript.com/" target="_blank">
+        instructions on how to enable JavaScript in your web browser</a>.
+      </div>
+    </noscript>
 
-    <div class="container">
+    <a class="anchor" id="searchResults" href="#searchResults"></a>
+    <div class="container" style="min-height:50em">
       <div class="row">
         <div class="col-md-12">
           <h3 id="search-header">Search Results</h3>
         </div>
       </div>
-      <div class="row" id="row-search-no-results">
+      <div class="row" id="row-search-start">
         <div class="col-md-12">
           <p>Enter a search term above to start!</p>
         </div>
       </div>
+      <div class="row" id="row-search-no-results" style="display:none">
+        <div class="col-md-12 text-center">
+          <p><span class="glyphicon glyphicon-exclamation-sign"></span> No results!</p>
+          <p>Try searching for something else.</p>
+        </div>
+      </div>
       <div class="row" id="row-search-results" style="display:none">
         <div class="col-md-12">
-          <p>Showing results for "<strong id="search-terms"></strong>" (<span id="search-results-count">0 results</span>) [<span id="search-results-time">0 milliseconds</span>]</p>
+          <p>Showing results for "<strong id="search-terms"></strong>" (<span id="search-results-count">0 results</span>) [Took <span id="search-results-time">0 milliseconds</span>]</p>
           <div class="list-group" id="group-results">
           </div>
         </div>
       </div>
+      <div class="row" id="row-search-loading" style="display:none">
+        <div class="col-md-12 text-center">
+          <p><span class="glyphicon glyphicon-time"></span> Loading...</p>
+        </div>
+      </div>
+      <div class="row" id="row-search-no-more" style="display:none">
+        <div class="col-md-12 text-center">
+          <p><span class="glyphicon glyphicon-remove"></span> No more results!</p>
+        </div>
+      </div>
+      <div class="row" id="row-search-trottled" style="display:none">
+        <div class="col-md-12 text-center">
+          <p><span class="glyphicon glyphicon-remove"></span> You're doing that too much, slow down!</p>
+        </div>
+      </div>
+      <div class="row" id="row-search-load-more" style="display:none">
+        <div class="col-md-offset-3 col-md-6">
+          <button class="btn btn-lg btn-block">
+            <span class="glyphicon glyphicon-menu-hamburger"></span> Load More
+          </button>
+        </div>
+      </div>
 
+    </div>
+    <div class="container">
       <hr>
-
       <footer>
         <p>Data retrieved, massaged, and indexed from <a href="https://fitbit.com?utm_source=relliker&utm_medium=referral" target="_blank">FitBit</a>.</p>
         <p><small>FitBit developers: if you're reading this - give me a better API ;)</small></p>
