@@ -128,6 +128,7 @@ def lambda_handler(event, context):
                                         size=50, from_=offset)
 
     next_offset = min(len(results['hits']['hits']) + offset + 1, results['hits']['total'])
+    print('[SEARCH] Records found: {}'.format(len(results['hits']['hits'])))
     response = {
         "statusCode": 200,
         "headers": {
