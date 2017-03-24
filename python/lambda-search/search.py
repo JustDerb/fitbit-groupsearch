@@ -132,8 +132,6 @@ def lambda_handler(event, context):
     response = {
         "statusCode": 200,
         "headers": {
-            # FIXME: remove after testing
-            "Access-Control-Allow-Origin": "*",
         },
         "body": json.dumps({
             "errorMessage": None,
