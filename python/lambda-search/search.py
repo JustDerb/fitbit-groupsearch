@@ -132,6 +132,7 @@ def lambda_handler(event, context):
     response = {
         "statusCode": 200,
         "headers": {
+            "Access-Control-Allow-Origin": "https://relliker.com"
         },
         "body": json.dumps({
             "errorMessage": None,
