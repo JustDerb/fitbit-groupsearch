@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,7 +23,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -45,15 +43,22 @@
             <button id="form-search-topbar-button" type="submit" class="btn btn-primary">
               <span class="glyphicon glyphicon-search"></span> Search
             </button>
-          </form>
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/about.html">About</a></li>
+          </ul>
         </div>
       </div>
     </nav>
 
     <div class="jumbotron">
       <div class="container">
-        <h1>A step in the right direction...</h1>
-        <p>You are probably here because FitBit only lists their groups alphabetically, right? Well, this is a search engine that does one better! Search for groups by title and also by descriptions. Try to search broad keywords, and clarify your search by entering your city or any other information you might think of. <i>Welcome to the new way to search FitBit groups.</i></p>
+        <div class="row">
+          <div class="col-md-12">
+            <h1>A step in the right direction...</h1>
+            <p>You are probably here because FitBit only lists their groups alphabetically, right? Well, this is a search engine that does one better! Search for groups by title and also by descriptions. Try to search broad keywords, and clarify your search by entering your city or any other information you might think of. <i>Welcome to the new way to search FitBit groups.</i></p>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-offset-4 col-md-4">
             <form onSubmit="return searchGroupsForm(this)">
@@ -80,6 +85,18 @@
 
     <a class="anchor" id="searchResults" href="#searchResults"></a>
     <div class="container" style="min-height:50em">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <ins class="adsbygoogle"
+            style="display:inline-block;width:728px;height:90px"
+            data-ad-client="ca-pub-8861318913253064"
+            data-ad-slot="5970958017"
+            data-adtest="on"></ins>
+          <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12">
           <h3 id="search-header">Search Results</h3>
@@ -128,13 +145,18 @@
 
     </div>
     <div class="container">
-      <hr>
-      <footer>
-        <p>Data retrieved, massaged, and indexed from <a href="https://fitbit.com?utm_source=relliker&utm_medium=referral" target="_blank">FitBit</a>.</p>
-        <p><small>FitBit developers: if you're reading this - give me a better API ;)</small></p>
-      </footer>
+      <div class="row">
+        <div class="col-md-12">
+          <hr>
+          <footer>
+            <p>Data retrieved, massaged, and indexed from <a href="https://fitbit.com?utm_source=relliker&utm_medium=referral" target="_blank">FitBit</a>.</p>
+            <p><small>FitBit developers: if you're reading this - give <a href="https://www.fitbit.com/user/22W8KP" target="_blank">me</a> a better API ;)</small></p>
+          </footer>
+        </div>
+      </div>
     </div>
 
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="/js/bootstrap.min.js"></script>
