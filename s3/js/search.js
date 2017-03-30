@@ -1,6 +1,6 @@
 'use strict';
 
-var API_ENDPOINT = 'https://bn5co2yv54.execute-api.us-west-2.amazonaws.com/Prod';
+var API_ENDPOINT = 'https://api.relliker.com/v1';
 
 var AD_SOURCE = '<ins class="adsbygoogle" ' +
   'style="display:block" ' +
