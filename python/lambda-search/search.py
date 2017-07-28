@@ -10,39 +10,30 @@ from requests_aws4auth import AWS4Auth
 
 # https://www.elastic.co/guide/en/elasticsearch/reference/2.3/query-dsl-query-string-query.html#_reserved_characters
 def needs_escaping(character):
-    escape_chars = {
-        '+': True,
-        '-': True,
-        '=': True,
-        '&': True,
-        '&': True,
-        '|': True,
-        '|': True,
-        '>': True,
-        '<': True,
-        '!': True,
-        '(': True,
-        ')': True,
-        '{': True,
-        '}': True,
-        '[': True,
-        ']': True,
-        '^': True,
-        '"': True,
-        '~': True,
-        '*': True,
-        '?': True,
-        ':': True,
-        '\\': True,
-        '/': True,
-    }
-    return escape_chars.get(character, False)
+    escape_chars = [
+        '+', '-', '=', '&', '|', '>', '<',
+        '!', '(', ')', '{', '}', '[', ']',
+        '^', '"', '~', '*', '?', ':', '\\',
+        '/',
+    ]
+    return character in escape_chars
+
+
+# Having these in the query string cause the sigv4 auth to screw up. Need to figure out why...
+def needs_removing(character):
+    escape_chars = [
+        '+', '&',
+    ]
+    return character in escape_chars
 
 
 def sanitize_search(term):
     sanitized = ''
     for character in term:
-        if needs_escaping(character):
+        if needs_removing(character):
+            # Put a space. Should be better for searches then "deleting" it
+            sanitized += ' '
+        elif needs_escaping(character):
             sanitized += '\\{}'.format(character)
         else:
             sanitized += character
@@ -89,7 +80,7 @@ def lambda_handler(event, context):
     search_term = query['s']
 
     parser = argparse.ArgumentParser()
-    # parser.add_argument('term', default='')
+    parser.add_argument('term', nargs='?', default='')
     parser.add_argument('--es_host')
     parser.add_argument('--es_port')
     parser.add_argument('--local', action='store_true')
@@ -123,7 +114,7 @@ def lambda_handler(event, context):
     print('[ELASTICSEARCH] Connected!')
 
     search_term = sanitize_search(search_term)
-    print('[SEARCH] {}'.format(search_term))
+    print('[SEARCH] {} (Offset: {})'.format(search_term, offset))
     results = elastic_search_api.search(index='group-index', doc_type='group_info', q=search_term,
                                         size=50, from_=offset)
 
