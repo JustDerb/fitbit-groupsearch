@@ -42,7 +42,16 @@ function addAd(groupResults) {
   let ad = $(AD_SOURCE);
   adWrapper.append(ad);
   groupResults.append(adWrapper);
-  (adsbygoogle = window.adsbygoogle || []).push({});
+  // Post a task to fill in the ad space since Adsense requires
+  // the DOM element to be visible to figure out what type of responsive ad
+  // to show
+  setTimeout(function(){
+    try {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.log(e);
+    }
+  }, 1000);
 }
 
 function populateResults(searchTerm, results, empty) {
@@ -128,7 +137,6 @@ function getSearchResults(searchTerm, offset) {
 
 function searchGroups(searchTerm) {
   let id = $(this).attr('id');
-  console.log(id);
   if (id === 'form-search-topbar-button') {
     searchTerm = $('#form-search-topbar-text').val();
     $('#form-search-jumbotron-text').val(searchTerm);
@@ -148,10 +156,6 @@ function searchGroups(searchTerm) {
   $('#row-search-load-more').hide();
   $('#row-search-trottled').hide();
   $('#row-search-loading').show();
-  var url = '/?s='+encodeURIComponent(searchTerm);
-  window.history.pushState('', '', url);
-  ga('set', 'page', url);
-  ga('send', 'pageview');
   getSearchResults(searchTerm, 0);
 }
 
@@ -180,7 +184,12 @@ function maybePerformSearch() {
 }
 
 function searchGroupsForm(form) {
-  searchGroups($(form).find('input.search-box').val());
+  let searchTerm = $(form).find('input.search-box').val();
+  let url = '/?s='+encodeURIComponent(searchTerm);
+  window.history.pushState('', '', url);
+  ga('set', 'page', url);
+  ga('send', 'pageview');
+  searchGroups(searchTerm);
   return false;
 }
 
