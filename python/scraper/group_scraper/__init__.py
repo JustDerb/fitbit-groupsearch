@@ -8,6 +8,7 @@ import time
 import urllib
 import urllib2
 import boto3
+import re
 from datetime import datetime
 
 from elasticsearch import Elasticsearch, RequestsHttpConnection
@@ -46,8 +47,18 @@ def build_opener(cookie_jar):
     return opener
 
 
-def login(username, password, cookie_jar):
+def grabCsrfToken(cookie_jar):
     opener = build_opener(cookie_jar)
+    response = opener.open('https://www.fitbit.com/login')
+    response_body = '\n'.join(response.readlines())
+    # <input name="csrfToken" type="hidden" value="XXXXXXXXXXXXXXX" />
+    search = re.search('<input\s+name=\"csrfToken\".*value=\"([\w]+)\"\s*/>', response_body)
+    return search.group(1)
+
+
+def login(username, password, cookie_jar):
+    csrfToken = grabCsrfToken(cookie_jar)
+    print 'csrfToken: {}'.format(csrfToken)
     login_data = urllib.urlencode({
         'login': 'Log In',
         'includeWorkflow': '',
@@ -57,7 +68,9 @@ def login(username, password, cookie_jar):
         'email': username,
         'password': password,
         'rememberMe': 'true',
+        'csrfToken': csrfToken,
     })
+    opener = build_opener(cookie_jar)
     response = opener.open('https://www.fitbit.com/login', login_data)
     response_body = '\n'.join(response.readlines())
     if 'meta http-equiv="refresh"' not in response_body:
