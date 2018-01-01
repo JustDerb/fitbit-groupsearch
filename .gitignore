@@ -10,5 +10,7 @@ python/lambda-*/include/
 python/lambda-*/lib/
 python/lambda-*/local/
 
+python/lambda-*/pip-selfcheck.json
+
 # lambda-uploader stuff
 python/*.zip
