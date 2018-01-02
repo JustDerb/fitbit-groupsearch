@@ -6,9 +6,8 @@ var AD_SOURCE = '<ins class="adsbygoogle" ' +
   'style="display:block" ' +
   'data-ad-client="ca-pub-8861318913253064" ' +
   'data-ad-slot="4955514410" ' +
-  'data-ad-format="link" ' +
-  'data-adtest="on"></ins>';
-  
+  'data-ad-format="link"></ins>';
+
 var TEXT_ADS = 0;
 
 function addResult(groupResults, result, searchTerm) {
@@ -31,7 +30,7 @@ function addResult(groupResults, result, searchTerm) {
   groupMain.append(groupMembers);
   groupMain.append(groupHeading);
   groupMain.append(groupDescription);
-  
+
   groupResults.append(groupMain);
 }
 
@@ -74,14 +73,14 @@ function populateResults(searchTerm, results, empty) {
       TEXT_ADS++;
     }
   }
-  
+
   $('#row-search-loading').hide();
   if (searchResults.length === 0) {
     $('#row-search-no-results').show();
   } else {
     $('#row-search-results').show();
   }
-  
+
   if (resultsLength > results.next_offset) {
     $('#row-search-load-more').show();
     $('#row-search-load-more').data('offset', results.next_offset);
@@ -119,7 +118,7 @@ function bolden(element, term) {
 
 function getSearchResults(searchTerm, offset) {
   $.ajax({
-    url: API_ENDPOINT + '/search', 
+    url: API_ENDPOINT + '/search',
     data: {
       s: searchTerm,
       o: offset
@@ -148,10 +147,10 @@ function searchGroups(searchTerm) {
     $('#form-search-jumbotron-text').val(searchTerm);
     $('#form-search-topbar-text').val(searchTerm);
   }
-  
+
   // Initiate call to API
   $('#row-search-start').hide();
-  $('#row-search-no-results').hide(); 
+  $('#row-search-no-results').hide();
   $('#row-search-results').hide();
   $('#row-search-load-more').hide();
   $('#row-search-trottled').hide();
@@ -195,4 +194,3 @@ function searchGroupsForm(form) {
 
 window.onpopstate = maybePerformSearch;
 maybePerformSearch();
-
