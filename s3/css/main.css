@@ -18,3 +18,7 @@ a.anchor {
 .search-description {
   word-wrap: break-word;
 }
+
+.statGraph {
+  height: 400px;
+}

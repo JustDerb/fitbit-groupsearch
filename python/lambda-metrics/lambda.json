@@ -1,0 +1,9 @@
+{
+  "name": "relliker-metrics",
+  "description": "function to get metrics about relliker",
+  "region": "us-west-2",
+  "handler": "metrics.lambda_handler",
+  "role": "arn:aws:iam::629523249783:role/service-role/relliker_lambda",
+  "timeout": 5,
+  "memory": 128
+}

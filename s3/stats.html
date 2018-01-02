@@ -54,79 +54,27 @@
             </button>
           </form>
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="/about.html">About <span class="sr-only">(current)</span></a></li>
+            <li><a href="/about.html">About</a></li>
             <li><a href="/updates.html">Updates</a></li>
-            <li><a href="/stats.html">Stats</a></li>
+            <li class="active"><a href="/stats.html">Stats <span class="sr-only">(current)</span></a></li>
           </ul>
         </div>
       </div>
     </nav>
     <div class="container">
-	    <div class="row">
-		    <div style="height:4em"></div>
-	    </div>
-	    <div class="row">
-		    <div class="col-md-8 col-md-offset-2">
-			    <h2>About this site</h2>
-			    <p>This site was made by a fellow fitbit-er to provide the community an easy way of
-			    finding groups within the FitBit.com website. Currently, you can only page through
-			    the groups in alphabetical order! So, this site provides keyword-based searching
-			    to help you find the right group for you.</p>
-		    </div>
-	    </div>
-	    <div class="row">
-		    <div class="col-md-8 col-md-offset-2">
-			    <h2>FAQ</h2>
-			    <div class="well">
-				    <ol>
-					    <li><a href="#faq1">What is this site?</a></li>
-					    <li><a href="#faq2">Why doesn't FitBit have a search feature?</a></li>
-					    <li><a href="#faq3">I just made a group and I can't find it on here!</a></li>
-					    <li><a href="#faq4">I got an issue or suggestion</a></li>
-					    <li><a href="#faq5">Why is this website called Relliker.com?</a></li>
-					    <li><a href="#faq6">Why are there ads?</a></li>
-				    </ol>
-			    </div>
-		    </div>
-	    </div>
-	    <div class="row">
-		    <div class="col-md-8 col-md-offset-2">
-			    <ol>
-				    <li id="faq1">
-					    <h4>What is this site?</h4>
-					    <p>This is a website to help FitBit users easily search the fitbit community
-					    groups so that they don't have to wade through pages and pages of groups only
-					    to get nowhere!</p>
-				    </li>
-				    <li id="faq2">
-					    <h4>Why doesn't FitBit have a search feature?</h4>
-					    <p>I don't know! You should ask them!</p>
-				    </li>
-				    <li id="faq3">
-					    <h4>I just made a group and I can't find it on here!</h4>
-					    <p>I scrape FitBit's server about everyday so please wait at least 24 hours
-					    for your group will show up.</p>
-				    </li>
-				    <li id="faq4">
-					    <h4>I got an issue or suggestion</h4>
-					    <p>Great! Head on over to <a href="http://www.fitbit.com/group/229YCB">FitBit Group Search</a>
-					    and create a discussion topic or <a href="https://www.fitbit.com/user/22W8KP" target="_blank">send me
-					    a message</a> through FitBit.</p>
-				    </li>
-				    <li id="faq5">
-					    <h4>Why is this website called Relliker.com?</h4>
-					    <p>I don't know. It was just a domain name I bought awhile ago that wasn't being used...</p>
-				    </li>
-				    <li id="faq6">
-					    <h4>Why are there ads?</h4>
-					    <p>Well, since this website is a side project for me an I am paying for all hosting costs, I
-					    want to offset some of the costs by putting Google Adsense Ads on the site. Some people do not
-					    like this but it's something I have to do to not shut down the site.</p>
-				    </li>
-			    </ol>
-		    </div>
-	    </div>
-	    <div class="row">
+      <div class="row">
+        <div style="height:4em"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h2>Stats for Nerds</h2>
+          <p>Below are various metrics about this site. This is to let you know
+          how the sites health is, and also provide some fun facts from pulling
+          data from FitBit. This data is ever-changing, so come back every so
+          often to see updates!</p>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-12 text-center">
           <!-- Responsive Header -->
           <ins class="adsbygoogle"
@@ -139,8 +87,45 @@
           </script>
         </div>
       </div>
-	  </div>
-	  <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h3>Indexed Groups (Month)</h3>
+          <div class="statContainer">
+            <canvas id="monthlyGroups" class="statGraph"></canvas>
+          </div>
+          <p>The overall number of groups that have been indexed so far, each
+            month. Expect this number to just keep going up!
+            <small class="text-muted">(Updated every hour)</small></p>
+        </div>
+        <div class="col-md-4">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+          <h3>Group Runs (Sum)</h3>
+          <div class="statContainer">
+            <canvas id="groupRunSum" class="statGraph"></canvas>
+          </div>
+          <p>Each hour, how many full scans have been run?
+            <small class="text-muted">(Updated every hour)</small></p>
+        </div>
+        <div class="col-md-4">
+          <h3>Group Runs Successful</h3>
+          <div class="statContainer">
+            <canvas id="groupRunSuccess" class="statGraph"></canvas>
+          </div>
+          <p>Status of runs by the hour. 1 = fully scanned, 0 = error. If there
+            are any 0 datapoints, an alarm will fire for investigation.
+            <small class="text-muted">(Updated every hour)</small></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2 text-center">
+          <p><strong>More stats to come!</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="container">
       <div class="row">
         <div class="col-md-12">
           <hr>
@@ -151,5 +136,16 @@
         </div>
       </div>
     </div>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="/js/stats.js"></script>
+    <script type="application/javascript">
+      fetchStats('monthlyGroups', 'monthlyGroups');
+      fetchStats('groupRunCounts', 'groupRunSum');
+      fetchStats('groupRunSuccesses', 'groupRunSuccess');
+    </script>
   </body>
 </html>
