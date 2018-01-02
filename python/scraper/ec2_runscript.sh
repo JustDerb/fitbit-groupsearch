@@ -7,7 +7,9 @@ virtualenv scraper
 pushd scraper
 source bin/activate
 aws s3 cp s3://relliker.com/scraper/relliker-settings.source relliker-settings.source
+set +x
 source relliker-settings.source
+set -x
 aws s3 cp s3://relliker.com/scraper/group_scraper-1.0.0.tar.gz group_scraper-1.0.0.tar.gz
 pip install group_scraper-1.0.0.tar.gz
 
