@@ -89,6 +89,17 @@
       </div>
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
+          <h3>Indexed Groups (Day)</h3>
+          <div class="statContainer">
+            <canvas id="dailyGroups" class="statGraph"></canvas>
+          </div>
+          <p>The overall number of groups that have been indexed so far, in the
+            past week. Expect this number to just keep going up!
+            <small class="text-muted">(Updated every hour)</small></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
           <h3>Indexed Groups (Month)</h3>
           <div class="statContainer">
             <canvas id="monthlyGroups" class="statGraph"></canvas>
@@ -96,8 +107,6 @@
           <p>The overall number of groups that have been indexed so far, each
             month. Expect this number to just keep going up!
             <small class="text-muted">(Updated every hour)</small></p>
-        </div>
-        <div class="col-md-4">
         </div>
       </div>
       <div class="row">
@@ -147,6 +156,7 @@
     <script src="/js/stats.js"></script>
     <script type="application/javascript">
       fetchStats('monthlyGroups', 'monthlyGroups');
+      fetchStats('dailyGroups', 'dailyGroups');
       fetchStats('groupRunCounts', 'groupRunSum');
       fetchStats('groupRunSuccesses', 'groupRunSuccess');
     </script>

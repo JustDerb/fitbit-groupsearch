@@ -42,6 +42,43 @@ def getMonthlyGroups():
     })
 
 
+def getDailyGroups():
+    now = datetime.utcnow()
+    stats = CW_CLIENT.get_metric_statistics(
+        Namespace='AWS/ES',
+        MetricName='SearchableDocuments',
+        Dimensions=[{
+            'Name': 'ClientId',
+            'Value': '629523249783',
+        },
+        {
+            'Name': 'DomainName',
+            'Value': 'relliker',
+        }],
+        StartTime=now - timedelta(days=7*3),
+        EndTime=now,
+        Statistics=['Maximum'],
+        # 1 day
+        Period=86400,
+        Unit='Count',
+        )
+
+    data = []
+    labels = []
+    print stats
+    for datapoint in sorted(stats['Datapoints'], key=lambda datapoint: datapoint['Timestamp']):
+        data.append(datapoint['Maximum'])
+        labels.append(datapoint['Timestamp'].strftime("%m/%d/%Y"))
+
+    return success_json({
+        "labels": labels,
+        "datasets": [{
+            "data": data,
+            "label": "Count",
+        }],
+    })
+
+
 def getScrapeCount():
     now = datetime.utcnow()
     stats = CW_CLIENT.get_metric_statistics(
@@ -134,6 +171,8 @@ def lambda_handler(event, context):
 
     if statType == "monthlyGroups":
         return getMonthlyGroups()
+    if statType == "dailyGroups":
+        return getDailyGroups()
     if statType == "groupRunCounts":
         return getScrapeCount()
     if statType == "groupRunSuccesses":
