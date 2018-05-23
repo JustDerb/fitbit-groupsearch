@@ -29,7 +29,7 @@ class GroupResponseParser(HTMLParser.HTMLParser, object):
         self.groups = []
 
     def handle_starttag(self, tag, attrs):
-        # print "Encountered an start tag <{}>".format(tag)
+        # print "Encountered a start tag <{}>".format(tag)
         class_values = self._get_html_attr('class', attrs)
         if tag == 'li':
             if self.state is not TagState.OUTSIDE_GROUP:
