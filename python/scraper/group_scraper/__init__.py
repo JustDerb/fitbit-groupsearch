@@ -35,30 +35,39 @@ def ensure_variable(actual, env_name):
 
 def build_opener(cookie_jar):
     opener = urllib2.build_opener(
-        # urllib2.HTTPRedirectHandler(),
+        urllib2.HTTPRedirectHandler(),
         urllib2.HTTPHandler(debuglevel=0),
         urllib2.HTTPSHandler(debuglevel=0),
-        urllib2.HTTPCookieProcessor(cookie_jar)
+        urllib2.HTTPCookieProcessor(cookie_jar),
     )
     opener.addheaders = [
-        ('User-agent', ('Mozilla/4.0 (compatible; MSIE 6.0; '
-                        'Windows NT 5.2; .NET CLR 1.1.4322)'))
+        ('User-agent', ('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'))
     ]
     return opener
 
 
-def grabCsrfToken(cookie_jar):
+def grabTokens(cookie_jar):
     opener = build_opener(cookie_jar)
     response = opener.open('https://www.fitbit.com/login')
     response_body = '\n'.join(response.readlines())
     # <input name="csrfToken" type="hidden" value="XXXXXXXXXXXXXXX" />
-    search = re.search('<input\s+name=\"csrfToken\".*value=\"([\w]+)\"\s*/>', response_body)
-    return search.group(1)
+    csrfTokenSearch = re.search('<input\s+name=\"csrfToken\".*value=\"([\w]+)\"\s*/>', response_body)
+    # <input type="hidden" name="_sourcePage" value="XXXXXXXXXXXXXXX" />
+    sourcePageSearch = re.search('<input\s+type=\"hidden\"\s+name=\"_sourcePage\".*value=\"(.+)\"\s*/>', response_body)
+    # <input type="hidden" name="__fp" value="XXXXXXXXXXXXXXX" />
+    fpSearch = re.search('<input\s+type=\"hidden\"\s+name=\"__fp\".*value=\"(.+)\"\s*/>', response_body)
+    return {
+           'csrfToken': csrfTokenSearch.group(1),
+           '_sourcePage': sourcePageSearch.group(1),
+           '__fp': fpSearch.group(1),
+       }
 
 
 def login(username, password, cookie_jar):
-    csrfToken = grabCsrfToken(cookie_jar)
-    print 'csrfToken: {}'.format(csrfToken)
+    tokens = grabTokens(cookie_jar)
+    # print 'csrfToken: {}'.format(tokens['csrfToken'])
+    # print '_sourcePage: {}'.format(tokens['_sourcePage'])
+    # print '__fp: {}'.format(tokens['__fp'])
     login_data = urllib.urlencode({
         'login': 'Log In',
         'includeWorkflow': '',
@@ -68,12 +77,34 @@ def login(username, password, cookie_jar):
         'email': username,
         'password': password,
         'rememberMe': 'true',
-        'csrfToken': csrfToken,
+        'csrfToken': tokens['csrfToken'],
+        '_sourcePage': tokens['_sourcePage'],
+        '__fp': tokens['__fp'],
     })
+    # This is fitbits new "consent" cookie
+    cookie_jar.set_cookie(cookielib.Cookie(
+            version=0,
+            name='fitbit_gdpr_ok',
+            value='true',
+            port=None,
+            port_specified=False,
+            domain='.fitbit.com',
+            domain_specified=True,
+            domain_initial_dot=True,
+            path="/",
+            path_specified=True,
+            secure=False,
+            expires=None,
+            discard=False,
+            comment=None,
+            comment_url=None,
+            rest=None
+        ))
     opener = build_opener(cookie_jar)
     response = opener.open('https://www.fitbit.com/login', login_data)
     response_body = '\n'.join(response.readlines())
-    if 'meta http-equiv="refresh"' not in response_body:
+    if '<title>Fitbit Dashboard</title>' not in response_body:
+        print response_body
         raise BaseException('Got bad response.  Wrong user/pass?')
 
 
@@ -87,7 +118,8 @@ def get_group(cookie_jar, prefix, start, total):
         'useWildcard': 'false',
     })
     response = opener.open('https://www.fitbit.com/groups?' + query_params)
-    return '\n'.join(response.readlines())
+    response_body = '\n'.join(response.readlines())
+    return response_body
 
 
 def main():
@@ -116,7 +148,7 @@ def main():
         ARGS.es_port = ensure_variable(ARGS.es_port, 'ES_PORT')
 
     START_TIME = time.time()
-    GLOBAL_COOKIE_JAR = cookielib.CookieJar()
+    GLOBAL_COOKIE_JAR = cookielib.LWPCookieJar("cookies.txt")
     # print('[POSTGRESQL] Connecting to {} [User: {}, Name: {}]...'.format(ARGS.db_host, ARGS.db_user, ARGS.db_name))
     # POSTGRES = psycopg2.connect(
     #     host=ARGS.db_host,
