@@ -13,7 +13,7 @@ setup(
         'elasticsearch>=2,<3',
         'psycopg2>=2.7.1',
         'enum34>=1.1.6',
-        'urllib3==1.24.2',
+        'urllib3==1.26.5',
         'boto3>=1.4.4',
         'requests_aws4auth>=0.9',
     ],
